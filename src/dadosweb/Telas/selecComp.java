@@ -13,7 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import org.jsoup.Jsoup;
+import org.jsoup.Jsoup;             
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
@@ -371,9 +371,7 @@ public class selecComp extends javax.swing.JDialog {
 
                 Funcoes f = new Funcoes();
                 jTextArea.setText("Conectando...");
-                
 
-                
                 DefaultTableModel Tjogos = (DefaultTableModel) jTablejogos.getModel();
 
                 int r = Tjogos.getRowCount();
@@ -410,17 +408,16 @@ public class selecComp extends javax.swing.JDialog {
                             };
 
                             Tjogos.addRow(inserir);
-                            
 
                             linhas.add(inserirLinhas);
 
                         }
-                        jTextArea.setText(jTextArea.getText()+"rodada "+rTF+"\n");
+                        jTextArea.setText(jTextArea.getText() + "rodada " + rTF + "\n");
                         rTF--;
                     }
 
                 } catch (IOException ex) {
-                    jTextArea.setText(jTextArea.getText()+"erro na rodada "+rTF+"\n"+ex);
+                    jTextArea.setText(jTextArea.getText() + "erro na rodada " + rTF + "\n" + ex);
                     Logger.getLogger(Competicoes.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
@@ -441,8 +438,10 @@ public class selecComp extends javax.swing.JDialog {
     private void jCPaisesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCPaisesActionPerformed
 
         Funcoes f = new Funcoes();
-        Document doc = f.buscarArquivo("D:\\documentos\\engenharia\\projetos\\DadosWeb\\src\\dadosweb\\consultaComps.txt");
-        Elements comps = doc.getElementsByClass("boxed cpt-list").select("div").get(0)
+        Document doc;
+        try {
+            doc = f.buscarArquivo(f.obterCaminho("../generate-football-tips/src/dadosweb/consultaComps.txt"));
+            Elements comps = doc.getElementsByClass("boxed cpt-list").select("div").get(0)
                 .getElementsByClass("toggle_content").get(jCPaises.getSelectedIndex()).select("a");
 
         jCCamp.removeAllItems();
@@ -451,20 +450,30 @@ public class selecComp extends javax.swing.JDialog {
             jCCamp.addItem(comps.get(i).attr("title") + "                                               "
                     + "                                                           -" + comps.get(i).attr("href"));
         }
+        } catch (URISyntaxException | IOException ex) {
+            Logger.getLogger(selecComp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }//GEN-LAST:event_jCPaisesActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
 
         Funcoes f = new Funcoes();
-        Document doc = f.buscarArquivo("D:\\documentos\\engenharia\\projetos\\DadosWeb\\src\\dadosweb\\consultaComps.txt");
 
-        Elements comps = doc.getElementsByClass("boxed cpt-list").select("div").get(0)
-                .getElementsByClass("toggle area");
-        for (int i = 0; i < comps.size(); i++) {
-            jCPaises.addItem(comps.get(i).text());
+        try {
+            System.out.println();
+
+            Document doc = f.buscarArquivo(f.obterCaminho("../generate-football-tips/src/dadosweb/consultaComps.txt"));
+
+            Elements comps = doc.getElementsByClass("boxed cpt-list").select("div").get(0)
+                    .getElementsByClass("toggle area");
+            for (int i = 0; i < comps.size(); i++) {
+                jCPaises.addItem(comps.get(i).text());
+            }
+        } catch (URISyntaxException | IOException ex) {
+            Logger.getLogger(selecComp.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }//GEN-LAST:event_formWindowOpened
 
     /**

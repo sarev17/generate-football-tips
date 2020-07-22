@@ -36,9 +36,11 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+
 
 /**
  *
@@ -577,6 +579,7 @@ public class DadosResult extends javax.swing.JFrame {
                 Object[] inserir = {f.buscarImagem(a.getLink(), a.getCompeticao() , 25 , 25)
                         ,a.getCompeticao(),a.getLink(),a.getGreen()+"%",a.getTjogos()};
                 bestCamp.addRow(inserir);
+                System.out.println();
             }
             
             
@@ -1037,10 +1040,15 @@ public class DadosResult extends javax.swing.JFrame {
 
     private void grafico() {
 
-        DefaultCategoryDataset campanha = new DefaultCategoryDataset();
-
+        
+        DefaultCategoryDataset campanha= new DefaultCategoryDataset();
+        
         JFreeChart chart = ChartFactory.createLineChart("RESULTADOS", "MES", "JOGOS", campanha, PlotOrientation.VERTICAL, false, false, false);
+        
+        
+        
         CategoryPlot catplot = chart.getCategoryPlot();
+      
         //((BarRenderer)catplot.getRenderer()).setBarPainter(new StandardBarPainter());
 
         catplot.setRangeGridlinePaint(Color.WHITE);
@@ -1048,6 +1056,7 @@ public class DadosResult extends javax.swing.JFrame {
         catplot.setDomainGridlinePaint(Color.WHITE);
 
         ChartPanel chartPanel = new ChartPanel(chart);
+     
         CampanhaCasa.removeAll();
         CampanhaCasa.add(chartPanel);
         CampanhaCasa.validate();

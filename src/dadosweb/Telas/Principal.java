@@ -25,7 +25,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import org.jfree.ui.DateCellRenderer;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -713,6 +712,9 @@ public class Principal extends javax.swing.JFrame {
                                     } else {
                                         campanha = "";
                                     }
+                                    
+                                    f.salvarEscudos(LabelNCompeticao.getText());
+                                    
 
                                     Object[] inserirCampanha = {f.buscarImagem(LabelNCompeticao.getText(),
                                         deAccent(dados.get(0).toString()), 30, 30),
@@ -720,8 +722,6 @@ public class Principal extends javax.swing.JFrame {
                                         f.buscarImagem(LabelNCompeticao.getText(), deAccent(dados.get(1).toString()), 30, 30)};
                                     analises.addRow(inserirCampanha);
 
-                                    
-                                    
                                     //inserindo no banco
                                     data = docLive.getElementsByClass("gamehead").get(1).text();
                                     data = data.substring(0, data.length() - 8);

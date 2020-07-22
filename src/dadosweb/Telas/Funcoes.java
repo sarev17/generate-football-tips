@@ -39,11 +39,72 @@ import org.jsoup.nodes.Document;
 /**
  *
  * @author andre
+ *
  */
 public class Funcoes {
 
+    public boolean buscarEscudo(String clube, String liga) throws IOException, URISyntaxException {
+
+        /**
+         * essa função testa o tamanho da imagem buscada,se retornar -1 é porque ela não existe
+         */
+        
+        Funcoes f = new Funcoes();
+        String caminho = "";
+        caminho = f.obterCaminho("../generate-football-tips/src/escudos/" + liga + "/" + clube + ".png");
+        if (new ImageIcon(caminho).getIconHeight() == (-1)) {
+            System.out.println("salvando imagem");
+            return true;
+        } else {
+              return false;
+        }
+ 
+    }
+
+    public void salvarEscudos(String competicao) {
+
+        String sql = "select *from prognosticos where competicao = \"" + competicao + "\" group by timeCasa";
+
+        ObterDados obt;
+        Funcoes f = new Funcoes();
+        try {
+            obt = new ObterDados();
+
+            obt.ProgSalvo(sql).forEach((a) -> {
+                try {
+                    String[] link = a.getLogo().split(",");
+
+                    if (buscarEscudo(a.getTimeCasa(), competicao)) {
+                        f.salvarImagem(link[0], competicao, a.getTimeCasa());
+                        System.out.println(a.getTimeCasa()+" salvo");
+                    }
+                    if (buscarEscudo(a.getTimeFora(), competicao)) {
+                        f.salvarImagem(link[1], competicao, a.getTimeFora());
+                        System.out.println(a.getTimeFora()+" salvo");
+                    }
+                } catch (IOException | URISyntaxException ex) {
+                    Logger.getLogger(Funcoes.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            });
+
+        } catch (IOException ex) {
+            Logger.getLogger(AtuEscudos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    public String obterCaminho(String nomeArq) throws URISyntaxException, IOException {
+
+        //retorna o caminho absoluto de algum arquivo do projeto
+        String path = new File(nomeArq).getCanonicalPath();
+
+        return path;
+    }
+
     public void abrirLink(String link) throws IOException, URISyntaxException {
 
+        // abre a pagina da web no navegador padrao
         try {
             java.awt.Desktop.getDesktop().browse(new java.net.URI(link));
         } catch (URISyntaxException ex) {
@@ -197,25 +258,29 @@ public class Funcoes {
             URL url = new URL(link);
             BufferedImage imagem = ImageIO.read(url);
 
-            File dir = new File("D:/documentos/engenharia/projetos/DadosWeb/src/escudos/" + comp);
+            File dir = new File("src\\escudos\\" + comp);
             dir.mkdir();
 
-            ImageIO.write(imagem, "png", new File("D:\\documentos\\engenharia\\projetos\\DadosWeb\\src\\escudos\\" + comp + "\\" + clube + ".png"));
+            // ImageIO.write(imagem, "png", new File("D:\\documentos\\engenharia\\projetos\\DadosWeb\\src\\escudos\\" + comp + "\\" + clube + ".png"));
+            ImageIO.write(imagem, "png", new File(dir.getAbsolutePath() + "\\" + clube + ".png"));
 
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Erro al dsalvar imagem \n" + e);
         }
 
-        System.out.println("concluido");
     }
 
     public ImageIcon buscarImagem(String competicao, String clube, int wt, int ht) {
 
         try {
 
-            ImageIcon icon = new ImageIcon("D:\\documentos\\engenharia\\projetos\\DadosWeb\\src\\escudos\\" + competicao + "\\" + clube + ".png");
+            File dir = new File("src\\escudos\\");
+
+            ImageIcon icon = new ImageIcon(dir.getAbsolutePath() + "\\" + competicao + "\\" + clube + ".png");
 
             icon.setImage(icon.getImage().getScaledInstance(wt, ht, 1));
+
+            System.out.println("imagem em \n" + dir.getAbsolutePath() + "\\" + competicao + "\\" + clube + ".png");
 
             return icon;
         } catch (Exception e) {
@@ -319,7 +384,7 @@ public class Funcoes {
         File[] fi = f.listarArquivos(path);
         Json j = new Json();
         for (File fi1 : fi) {
-            j.tratarDados(path+"\\"+ fi1.getName());
+            j.tratarDados(path + "\\" + fi1.getName());
         }
     }
 

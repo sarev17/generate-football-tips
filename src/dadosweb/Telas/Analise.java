@@ -25,8 +25,6 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.renderer.category.BarRenderer;
-import org.jfree.chart.renderer.category.StandardBarPainter;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -1474,6 +1472,7 @@ public class Analise extends javax.swing.JFrame {
             }
         } catch (IOException ex) {
             Logger.getLogger(Analise.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Erro ao acessar\n"+ex);
         }
 
     }
@@ -1759,7 +1758,11 @@ public class Analise extends javax.swing.JFrame {
         ArrayList golsC = new ArrayList();
         ArrayList nomes = new ArrayList();
 
+       
+        
+       
         DefaultCategoryDataset campanha = new DefaultCategoryDataset();
+        
         while (controle < 9) {
             while (!TableCasaFora.getValueAt(controle, 0).toString().equals(jLabelCasa.getText())) {
                 //JOptionPane.showMessageDialog(null, "linha = "+controle+" "+TableCasaFora.getValueAt(controle, 0).toString());
@@ -1935,6 +1938,7 @@ public class Analise extends javax.swing.JFrame {
             campanha.setValue(val, "Vitoria", nomes.get(4).toString());
         }
 
+       
         JFreeChart chart = ChartFactory.createLineChart("Campanha casa", "", "", campanha, PlotOrientation.VERTICAL, false, false, false);
         CategoryPlot catplot = chart.getCategoryPlot();
         //((BarRenderer)catplot.getRenderer()).setBarPainter(new StandardBarPainter());
@@ -2140,7 +2144,7 @@ public class Analise extends javax.swing.JFrame {
             campanha2.setValue(val, "Vitoria", nomes.get(4).toString());
         }
 
-        JFreeChart chart2 = ChartFactory.createLineChart("Campanha casa", "", "", campanha2, PlotOrientation.VERTICAL, false, false, false);
+       JFreeChart chart2 = ChartFactory.createLineChart("Campanha casa", "", "", campanha2, PlotOrientation.VERTICAL, false, false, false);
         CategoryPlot catplot2 = chart2.getCategoryPlot();
         //((BarRenderer)catplot.getRenderer()).setBarPainter(new StandardBarPainter());
 

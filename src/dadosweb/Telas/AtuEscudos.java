@@ -109,22 +109,8 @@ public class AtuEscudos extends javax.swing.JFrame {
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
 
-        String sql = "select *from prognosticos where competicao = \""+jCComp.getSelectedItem().toString()+"\" group by timeCasa";
-        
-        ObterDados obt;
         Funcoes f = new Funcoes();
-        try {
-            obt = new ObterDados();
-            
-            obt.ProgSalvo(sql).forEach((a) -> {
-                String[] link = a.getLogo().split(",");
-                f.salvarImagem(link[0], jCComp.getSelectedItem().toString(), a.getTimeCasa());
-                f.salvarImagem(link[1], jCComp.getSelectedItem().toString(), a.getTimeFora());
-            });
-            
-        } catch (IOException ex) {
-            Logger.getLogger(AtuEscudos.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        f.salvarEscudos(jCComp.getSelectedItem().toString());
         
     }//GEN-LAST:event_jButton1MouseClicked
 
