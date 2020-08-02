@@ -41,7 +41,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
-
 /**
  *
  * @author andre
@@ -142,6 +141,11 @@ public class DadosResult extends javax.swing.JFrame {
         jBFiltrar.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jBFiltrarMouseClicked(evt);
+            }
+        });
+        jBFiltrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBFiltrarActionPerformed(evt);
             }
         });
 
@@ -530,16 +534,12 @@ public class DadosResult extends javax.swing.JFrame {
         JTableRendererImageCell renderer1 = new JTableRendererImageCell();
         DefaultTableModel bestCamp = (DefaultTableModel) jTablecamp1.getModel();
         columnModel1.getColumn(0).setCellRenderer(renderer1);
-        
-        
-        
-        
+
         jTableResultados.setRowHeight(20);
         jTableResultadosJogos.setRowHeight(20);
         JTableUtilities.setCellsAlignment(jTableResultados, SwingConstants.CENTER, 1);
         JTableUtilities.setCellsAlignment(jTableResultados, SwingConstants.CENTER, 2);
 
-        
         String sql = "select timecasa as competicao, (greencasa+greenfora)*100/(jcasa+jfora) as \"greens\",c1 as link,jcasa+jfora as jogos from\n"
                 + "		(((Select timecasa as tc,count(timecasa) as Jcasa,competicao as c from prognosticos\n"
                 + "				group by timecasa order by timecasa)a\n"
@@ -567,35 +567,39 @@ public class DadosResult extends javax.swing.JFrame {
                 + "    order by greens desc\n"
                 + "        ";
 
-        
-        
         Funcoes f = new Funcoes();
-        
+
         try {
-            
+
             ObterDados o = new ObterDados();
-            
-            for(DAO a : o.ConsultaJoin(sql)){
-                Object[] inserir = {f.buscarImagem(a.getLink(), a.getCompeticao() , 25 , 25)
-                        ,a.getCompeticao(),a.getLink(),a.getGreen()+"%",a.getTjogos()};
+
+            for (DAO a : o.ConsultaJoin(sql)) {
+                Object[] inserir = {f.buscarImagem(a.getLink(), a.getCompeticao(), 25, 25),
+                     a.getCompeticao(), a.getLink(), a.getGreen() + "%", a.getTjogos()};
                 bestCamp.addRow(inserir);
-                System.out.println();
             }
-            
-            
+
         } catch (IOException | SQLException ex) {
             Logger.getLogger(DadosResult.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
-        
-        
+
 
     }//GEN-LAST:event_formWindowOpened
 
     private void jBFiltrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jBFiltrarMouseClicked
 
         DefaultTableModel listaRES = (DefaultTableModel) jTableResultados.getModel();
+        DefaultTableModel camp = (DefaultTableModel) jTablecamp1.getModel();
+
+        int linhas = jTablecamp1.getRowCount();
+        Funcoes f = new Funcoes();
+
+        for (int i = 0; i < linhas; i++) {
+            camp.removeRow(0);
+        }
+
+        jTablecamp1 = f.Resultadosgerais(jTablecamp1);
+
         try {
 
             String sql = "select lk as link,c as competicao,tc as greens,tc2 as jogos from \n"
@@ -647,7 +651,7 @@ public class DadosResult extends javax.swing.JFrame {
 
         if (jTableResultadosJogos.getSelectedColumn() == 1) {
             try {
-                f.analisarJogo(logoComp[0].replace("live", "odds#tab=odds_graph_1"));
+                f.analisarJogo(logoComp[0].replace("live", ""));
                 jLinf.setText("carregando analise de "
                         + jTableResultadosJogos.getValueAt(jTableResultadosJogos.getSelectedRow(), 1).toString());
             } catch (Exception e) {
@@ -893,7 +897,7 @@ public class DadosResult extends javax.swing.JFrame {
         // TODO add your handling code here:
 
         String[] logoComp = jTableResultadosJogos.getValueAt(jTableResultadosJogos.getSelectedRow(), 4).toString().split(",");
-        
+
         Funcoes f = new Funcoes();
         f.analisarJogo(logoComp[0]);
 
@@ -937,35 +941,34 @@ public class DadosResult extends javax.swing.JFrame {
     }//GEN-LAST:event_jTablecamp1MouseEntered
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-        
+
         String sql;
         ObterDados mercados;
         ObterDados camp;
-         try {
+        try {
 
             sql = "select lk as link,mercado1 as competicao,totmer as greens,vit*100/totmer as jogos from\n"
                     + " ((select 1 as x,link as lk, right(prog,7) as mercado1,count(result) as totmer from prognosticos where "
                     + "competicao=\"" + jTableResultados.getValueAt(jTableResultados.getSelectedRow(), 0)
-                    + "\" and data > \""+jFdata.getText()+"\" \n"
+                    + "\" and data > \"" + jFdata.getText() + "\" \n"
                     + "	group by mercado1 order by mercado1) a    \n"
                     + "		join\n"
                     + " (select 2 as x, link as lk2,right(prog,7) as mercado2,count(result) as vit from prognosticos where "
                     + "competicao=\"" + jTableResultados.getValueAt(jTableResultados.getSelectedRow(), 0)
-                    + "\" and result=\"green\" and data > \""+jFdata.getText()+"\"\n"
+                    + "\" and result=\"green\" and data > \"" + jFdata.getText() + "\"\n"
                     + "	group by mercado2 order by mercado2) b\n"
                     + "		on mercado1=mercado2)\n"
                     + "		join\n"
                     + " (select 3 as x, link as lk3,right(prog,7) as mercado3,count(result) as der from prognosticos where "
                     + "competicao=\"" + jTableResultados.getValueAt(jTableResultados.getSelectedRow(), 0)
-                    + "\" and result=\"red\" and data > \""+jFdata.getText()+"\"\n"
+                    + "\" and result=\"red\" and data > \"" + jFdata.getText() + "\"\n"
                     + "	group by mercado3 order by mercado3) c\n"
                     + "		on mercado2=mercado3";
 
             while (jTableMercados.getModel().getRowCount() > 0) {
                 ((DefaultTableModel) jTableMercados.getModel()).removeRow(0);
             }
-            
-            
+
             DefaultTableModel listaMER = (DefaultTableModel) jTableMercados.getModel();
             mercados = new ObterDados();
             for (DAO b : mercados.ConsultaJoin(sql)) {
@@ -980,21 +983,20 @@ public class DadosResult extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(DadosResult.class.getName()).log(Level.SEVERE, null, ex);
         }
-         
-         
-         try{
-          sql = "select timecasa as competicao, (greencasa+greenfora)*100/(jcasa+jfora) as \"greens\",\"link\""
+
+        try {
+            sql = "select timecasa as competicao, (greencasa+greenfora)*100/(jcasa+jfora) as \"greens\",\"link\""
                     + ",(greencasa+greenfora)*100/(jcasa+jfora) as jogos from\n"
                     + "		(((Select timecasa as tc,count(timecasa) as Jcasa from prognosticos\n"
                     + "			where competicao=\"" + jTableResultados.getValueAt(jTableResultados.getSelectedRow(), 0) + "\""
-                  + "and data > \""+jFdata.getText()+"\"\n"
+                    + "and data > \"" + jFdata.getText() + "\"\n"
                     + "				group by timecasa order by timecasa)a\n"
                     + "		\n"
                     + "        join\n"
                     + "		\n"
                     + "        (select timecasa,count(timecasa) as greenCasa  from prognosticos	\n"
                     + "			where competicao=\"" + jTableResultados.getValueAt(jTableResultados.getSelectedRow(), 0) + "\" and result=\"green\""
-                  + "and data > \""+jFdata.getText()+"\"\n"
+                    + "and data > \"" + jFdata.getText() + "\"\n"
                     + "				group by timecasa order by timecasa)b\n"
                     + "			on  timecasa=tc)\n"
                     + "		\n"
@@ -1002,7 +1004,7 @@ public class DadosResult extends javax.swing.JFrame {
                     + "		\n"
                     + "        (select timefora,count(timecasa) as greenfora  from prognosticos	\n"
                     + "			where competicao=\"" + jTableResultados.getValueAt(jTableResultados.getSelectedRow(), 0) + "\" and result=\"green\""
-                  + "and data > \""+jFdata.getText()+"\"\n"
+                    + "and data > \"" + jFdata.getText() + "\"\n"
                     + "				group by timefora order by timefora)c    \n"
                     + "		on timecasa=timefora)\n"
                     + "        \n"
@@ -1010,7 +1012,7 @@ public class DadosResult extends javax.swing.JFrame {
                     + "		\n"
                     + "		(select timefora as y,count(timeFora) as Jfora  from prognosticos	\n"
                     + "	where competicao=\"" + jTableResultados.getValueAt(jTableResultados.getSelectedRow(), 0) + "\" "
-                  + "and data > \""+jFdata.getText()+"\"\n"
+                    + "and data > \"" + jFdata.getText() + "\"\n"
                     + "		group by y order by y)d\n"
                     + "		on timecasa=y\n"
                     + "	\n"
@@ -1018,7 +1020,7 @@ public class DadosResult extends javax.swing.JFrame {
 
             while (jTablecamp.getModel().getRowCount() > 0) {
                 ((DefaultTableModel) jTablecamp.getModel()).removeRow(0);
-            }   
+            }
             camp = new ObterDados();
             DefaultTableModel listaCAMP = (DefaultTableModel) jTablecamp.getModel();
             Funcoes f = new Funcoes();
@@ -1031,32 +1033,29 @@ public class DadosResult extends javax.swing.JFrame {
 
         } catch (IOException | SQLException e) {
         }
-            
-            
-         
-        
-        
+
+
     }//GEN-LAST:event_jButton1MouseClicked
+
+    private void jBFiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBFiltrarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jBFiltrarActionPerformed
 
     private void grafico() {
 
-        
-        DefaultCategoryDataset campanha= new DefaultCategoryDataset();
-        
-        JFreeChart chart = ChartFactory.createLineChart("RESULTADOS", "MES", "JOGOS", campanha, PlotOrientation.VERTICAL, false, false, false);
-        
-        
-        
-        CategoryPlot catplot = chart.getCategoryPlot();
-      
-        //((BarRenderer)catplot.getRenderer()).setBarPainter(new StandardBarPainter());
+        DefaultCategoryDataset campanha = new DefaultCategoryDataset();
 
+        JFreeChart chart = ChartFactory.createLineChart("RESULTADOS", "MES", "JOGOS", campanha, PlotOrientation.VERTICAL, false, false, false);
+
+        CategoryPlot catplot = chart.getCategoryPlot();
+
+        //((BarRenderer)catplot.getRenderer()).setBarPainter(new StandardBarPainter());
         catplot.setRangeGridlinePaint(Color.WHITE);
         catplot.setBackgroundPaint(Color.BLACK);
         catplot.setDomainGridlinePaint(Color.WHITE);
 
         ChartPanel chartPanel = new ChartPanel(chart);
-     
+
         CampanhaCasa.removeAll();
         CampanhaCasa.add(chartPanel);
         CampanhaCasa.validate();
@@ -1092,7 +1091,7 @@ public class DadosResult extends javax.swing.JFrame {
                 tot = Integer.parseInt(a.getTimeCasa());
                 par = Integer.parseInt(a.getCompeticao());
                 campanha.setValue(par * 100 / tot, "RED", a.getIdPrognostico() + "(" + tot + " jogos)");
-                System.out.println(tot + " " + par);
+                // System.out.println(tot + " " + par);
             }
 
             sql = "select mes as idPrognosticos,totRes as competicao,totJog as timeCasa,timeFora,prog,placar,result,link,logoTimes,year(data) as 'data' from\n"
@@ -1118,7 +1117,7 @@ public class DadosResult extends javax.swing.JFrame {
                 tot = Integer.parseInt(a.getTimeCasa());
                 par = Integer.parseInt(a.getCompeticao());
                 campanha.setValue(par * 100 / tot, "GREEN", a.getIdPrognostico() + "(" + tot + " jogos)");
-                System.out.println(tot + " " + par);
+                // System.out.println(tot + " " + par);
             }
 
         } catch (IOException ex) {

@@ -1463,7 +1463,7 @@
                               <Group type="103" groupAlignment="2" attributes="0">
                                   <Component id="MMatch" alignment="2" min="-2" pref="316" max="-2" attributes="0"/>
                                   <Component id="MGols" alignment="2" min="-2" pref="316" max="-2" attributes="0"/>
-                                  <Component id="ht" alignment="2" min="-2" pref="316" max="-2" attributes="0"/>
+                                  <Component id="BTS" alignment="2" min="-2" pref="316" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace pref="11" max="32767" attributes="0"/>
                           </Group>
@@ -1477,7 +1477,7 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="MGols" min="-2" pref="48" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="ht" min="-2" pref="48" max="-2" attributes="0"/>
+                              <Component id="BTS" min="-2" pref="48" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
                           </Group>
                       </Group>
@@ -1532,7 +1532,7 @@
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="MMatchActionPerformed"/>
                       </Events>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="ht">
+                    <Component class="javax.swing.JTextField" name="BTS">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="0" green="0" red="0" type="rgb"/>
@@ -1553,7 +1553,7 @@
                         </Property>
                       </Properties>
                       <Events>
-                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="htActionPerformed"/>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="BTSActionPerformed"/>
                       </Events>
                     </Component>
                   </SubComponents>

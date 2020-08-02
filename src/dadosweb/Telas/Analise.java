@@ -5,19 +5,18 @@
  */
 package dadosweb.Telas;
 
-import java.awt.BorderLayout;
+import static dadosweb.Telas.Principal.deAccent;
+
 import java.awt.Color;
-import java.awt.Image;
+
 import java.io.IOException;
 import static java.lang.Thread.sleep;
-import java.net.URL;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import org.jfree.chart.ChartFactory;
@@ -130,7 +129,7 @@ public class Analise extends javax.swing.JFrame {
         PROGNOSTICO = new javax.swing.JPanel();
         MGols = new javax.swing.JTextField();
         MMatch = new javax.swing.JTextField();
-        ht = new javax.swing.JTextField();
+        BTS = new javax.swing.JTextField();
         jPanel9 = new javax.swing.JPanel();
         j1 = new javax.swing.JLabel();
         j2 = new javax.swing.JLabel();
@@ -925,14 +924,14 @@ public class Analise extends javax.swing.JFrame {
             }
         });
 
-        ht.setBackground(new java.awt.Color(0, 0, 0));
-        ht.setFont(new java.awt.Font("Arial", 1, 20)); // NOI18N
-        ht.setForeground(new java.awt.Color(255, 255, 255));
-        ht.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        ht.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 3));
-        ht.addActionListener(new java.awt.event.ActionListener() {
+        BTS.setBackground(new java.awt.Color(0, 0, 0));
+        BTS.setFont(new java.awt.Font("Arial", 1, 20)); // NOI18N
+        BTS.setForeground(new java.awt.Color(255, 255, 255));
+        BTS.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        BTS.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255), 3));
+        BTS.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                htActionPerformed(evt);
+                BTSActionPerformed(evt);
             }
         });
 
@@ -945,7 +944,7 @@ public class Analise extends javax.swing.JFrame {
                 .addGroup(PROGNOSTICOLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(MMatch, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(MGols, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ht, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(BTS, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(11, Short.MAX_VALUE))
         );
         PROGNOSTICOLayout.setVerticalGroup(
@@ -956,7 +955,7 @@ public class Analise extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(MGols, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ht, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(BTS, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -1397,9 +1396,9 @@ public class Analise extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_ht3ActionPerformed
 
-    private void htActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_htActionPerformed
+    private void BTSActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTSActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_htActionPerformed
+    }//GEN-LAST:event_BTSActionPerformed
 
     private void MMatchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MMatchActionPerformed
         // TODO add your handling code here:
@@ -1411,12 +1410,16 @@ public class Analise extends javax.swing.JFrame {
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         // TODO add your handling code here:
-        
-        
-        
+
+
     }//GEN-LAST:event_jButton1MouseClicked
 
-    public void lastGames(String url) {
+    /**
+     *
+     * @param url link doconfronto
+     * @return numero de jogos dipsutados ultimamente
+     */
+    public int lastGames(String url) {
 
         //################ULTIMOS 10 JOGOS#######################
         TableCasaFora.getColumnModel().getColumn(0).setMaxWidth(150);
@@ -1442,19 +1445,17 @@ public class Analise extends javax.swing.JFrame {
         DefaultTableModel Tconfronto2 = (DefaultTableModel) TableCasaFora2.getModel();
 
         try {
+            System.out.println("link " + url);
             doc = Jsoup.connect(url).get();
             String[] placar;
 
-            //JOptionPane.showMessageDialog(null, parteNome[0]);
-            //int qtd = doc.getElementsByClass("stat-last10 stat-half-padding").size();
             for (int j = 0; j < 2; j++) {
                 Element stats = doc.getElementsByClass("stat-last10 stat-half-padding").get(j);
-                System.out.println("Quantidade de Stats " + doc.getElementsByClass("stat-last10 stat-half-padding").size());
+                //System.out.println("Quantidade de Stats " + doc.getElementsByClass("stat-last10 stat-half-padding").size());
 
                 for (int i = 1; i < stats.select("tr").select("td").select("a").size(); i += 4) {
                     Elements confronto = stats.select("tr").select("td").select("a");
                     placar = confronto.get(i + 1).text().split("-");
-                    //System.out.println(confronto.get(i).text() + " " + confronto.get(i + 1).text() + " " + confronto.get(i + 2).text());
 
                     if (j == 0) {
                         if (placar.length > 1) {
@@ -1470,10 +1471,14 @@ public class Analise extends javax.swing.JFrame {
                     }
                 }
             }
+            return Tconfronto.getRowCount() + Tconfronto2.getRowCount();
+
         } catch (IOException ex) {
             Logger.getLogger(Analise.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(null, "Erro ao acessar\n"+ex);
+            JOptionPane.showMessageDialog(null, "Erro ao acessar\n" + ex);
         }
+
+        return Tconfronto.getRowCount() + Tconfronto2.getRowCount();
 
     }
 
@@ -1583,8 +1588,8 @@ public class Analise extends javax.swing.JFrame {
         vitorias.setText(vit + "");//vitorias nos 10 jogods
         derrotas.setText(der + "");
         empates.setText(emp + "");
-        marca.setText(nm + " Jogos");
-        sofre.setText(ns + " Jogos");
+        marca.setText(nm + "");
+        sofre.setText(ns + "");
         under.setText(vunder + "");
         over.setText(vover + "");
         mm.setText(ngm / 10 + "");
@@ -1697,55 +1702,18 @@ public class Analise extends javax.swing.JFrame {
         vitorias1.setText(vit + "");
         derrotas1.setText(der + "");
         empates1.setText(emp + "");
-        marca1.setText(nm + " Jogos");
-        sofre1.setText(ns + " Jogos");
+        marca1.setText(nm + "");
+        sofre1.setText(ns + "");
         under1.setText(vunder + "");
         over1.setText(vover + "");
         mm1.setText(ngm / 10 + "");
         ms1.setText(ngs / 10 + "");
 
-        try {
-            Document doc;
-            doc = Jsoup.connect(url).get();
-            Elements stats = doc.getElementsByClass("stats-game-head-teamname hide-mobile");
-
-            URL casa = new URL(stats.get(0).select("a").select("img").attr("src"));
-            Image imagem = ImageIO.read(casa);
-
-            ImageIcon icon = new ImageIcon(imagem);
-
-            icon.setImage(icon.getImage().getScaledInstance(logog.getWidth(), logog.getHeight(), 1));
-            logog.setIcon(icon);
-            logo.setIcon(icon);
-
-            NomeCasa.setText(jLabelCasa.getText());
-
-        } catch (Exception e) {
-
-        }
-        try {
-            Document doc;
-            doc = Jsoup.connect(url).get();
-            Elements stats = doc.getElementsByClass("stats-game-head-teamname hide-mobile");
-
-            URL fora = new URL(stats.get(1).select("a").select("img").attr("src"));
-            Image imagem = ImageIO.read(fora);
-
-            ImageIcon icon = new ImageIcon(imagem);
-
-            icon.setImage(icon.getImage().getScaledInstance(logog1.getWidth(), logog1.getHeight(), 1));
-            logog1.setIcon(icon);
-            logo1.setIcon(icon);
-
-            NomeFora.setText(jLabelCasa1.getText());
-
-        } catch (Exception e) {
-
-        }
+        Funcoes f = new Funcoes();
 
         ///**************Criando Graficos*************
         Document doc;
-        doc = Jsoup.connect(url).get();
+
         String[] golsMarcados = null;
         float vit1 = 0;
         float der1 = 0;
@@ -1758,11 +1726,8 @@ public class Analise extends javax.swing.JFrame {
         ArrayList golsC = new ArrayList();
         ArrayList nomes = new ArrayList();
 
-       
-        
-       
         DefaultCategoryDataset campanha = new DefaultCategoryDataset();
-        
+
         while (controle < 9) {
             while (!TableCasaFora.getValueAt(controle, 0).toString().equals(jLabelCasa.getText())) {
                 //JOptionPane.showMessageDialog(null, "linha = "+controle+" "+TableCasaFora.getValueAt(controle, 0).toString());
@@ -1938,7 +1903,6 @@ public class Analise extends javax.swing.JFrame {
             campanha.setValue(val, "Vitoria", nomes.get(4).toString());
         }
 
-       
         JFreeChart chart = ChartFactory.createLineChart("Campanha casa", "", "", campanha, PlotOrientation.VERTICAL, false, false, false);
         CategoryPlot catplot = chart.getCategoryPlot();
         //((BarRenderer)catplot.getRenderer()).setBarPainter(new StandardBarPainter());
@@ -2144,7 +2108,7 @@ public class Analise extends javax.swing.JFrame {
             campanha2.setValue(val, "Vitoria", nomes.get(4).toString());
         }
 
-       JFreeChart chart2 = ChartFactory.createLineChart("Campanha casa", "", "", campanha2, PlotOrientation.VERTICAL, false, false, false);
+        JFreeChart chart2 = ChartFactory.createLineChart("Campanha casa", "", "", campanha2, PlotOrientation.VERTICAL, false, false, false);
         CategoryPlot catplot2 = chart2.getCategoryPlot();
         //((BarRenderer)catplot.getRenderer()).setBarPainter(new StandardBarPainter());
 
@@ -2168,18 +2132,22 @@ public class Analise extends javax.swing.JFrame {
         //Resultado Geral
         float vitC = Integer.parseInt(vitorias.getText());
         float derC = Integer.parseInt(derrotas.getText());
-        float vitC1 = 5;//Integer.parseInt(vitorias1.getText());
-        float derC1 = 2;//Integer.parseInt(derrotas1.getText());
-        float cap1 = ((vitC + derC1) / 20 * 100);
-        float cap2 = (vitC1 + derC) / 20 * 100;
+        float vitC1 = Integer.parseInt(vitorias1.getText());
+        float derC1 = Integer.parseInt(derrotas1.getText());
+        float cap1 = ((vitC + derC1) / (TableCasaFora.getRowCount() + TableCasaFora2.getRowCount())) * 100;
+        float cap2 = ((vitC1 + derC) / (TableCasaFora.getRowCount() + TableCasaFora2.getRowCount())) * 100;
 
         //preenchendo V-D-E
         ArrayList res = new ArrayList();
         ArrayList res2 = new ArrayList();
+
+        //res È o saldo de gols em cada partida
         res.clear();
         res2.clear();
+        int tJogosC = TableCasaFora.getRowCount();
+        int tJogosF = TableCasaFora2.getRowCount();
 
-        for (int a = 0; a < 5; a++) {
+        for (int a = 0; a < tJogosC; a++) {
             if ((TableCasaFora.getValueAt(a, 0).toString().trim()).equals(jLabelCasa.getText())) {
                 res.add(Integer.parseInt(TableCasaFora.getValueAt(a, 1).toString()) - Integer.parseInt(TableCasaFora.getValueAt(a, 2).toString()));
             } else {
@@ -2187,7 +2155,7 @@ public class Analise extends javax.swing.JFrame {
             }
         }
 
-        for (int a = 0; a < 5; a++) {
+        for (int a = 0; a < tJogosF; a++) {
             if ((TableCasaFora2.getValueAt(a, 3).toString().trim()).equals(jLabelCasa1.getText())) {
                 res2.add(Integer.parseInt(TableCasaFora2.getValueAt(a, 2).toString()) - Integer.parseInt(TableCasaFora2.getValueAt(a, 1).toString()));
             } else {
@@ -2325,73 +2293,19 @@ public class Analise extends javax.swing.JFrame {
             }
         }
 
-        int i = 0;
-        float camp = 0, camp1 = 0;
+        //gerando campanha
+        String Odds[] = f.gerarODD(res, res2, lnp1, lnp, progVit, progVit1, progDer, progDer1, progMaior, progMaior1, progMenor, progMenor1, cap1, cap2);
+        r1.setText(Odds[0]);
 
-        while ((int) res.get(i) > 0) {
-            i++;
-
-        }
-        camp += 3 * i;
-        i = 0;
-        while ((int) res2.get(i) > 0) {
-            i++;
-
-        }
-        camp1 += 3 * i;
-
-        i = 0;
-        while ((int) res.get(i) < 0) {
-            i++;
-
-        }
-        camp -= 2 * 1;
-
-        i = 0;
-        while ((int) res2.get(i) < 0) {
-            i++;
-
-        }
-        camp1 -= 2 * 1;
-
-        camp += ((progVit.getValue() - progDer.getValue()) / 10) + (((progMaior.getValue() - progMenor.getValue()) / 10) * 2);
-        camp1 += (progVit1.getValue() - progDer1.getValue()) / 10 + (((progMaior1.getValue() - progMenor1.getValue()) / 10) * 2);
-
-        golsM = Integer.parseInt(lGolsM.getText());
-        golsS = Integer.parseInt(lGolsS.getText());
-
-        r1.setText((int) (((cap1 + (cap1 + camp)) / 2)
-                + (golsM - golsS) * 0.5) + "%");
-
-        golsM = Integer.parseInt(lGolsM1.getText());
-        golsS = Integer.parseInt(lGolsS1.getText());
-        r2.setText((int) ((cap2 + (cap2 + camp1)) / 2
-                + (golsM - golsS) * 0.5) + "%");
-
+        r2.setText(Odds[1]);
         //Match Odss
-        
-        DecimalFormat df = new DecimalFormat("0.00");
-        
-        float v1 = Integer.parseInt(r1.getText().replace("%", "")), v2 = Integer.parseInt(r2.getText().replace("%", ""));
 
-        //JOptionPane.showMessageDialog(null, v1 + " " + v2);
-        if (v1 > 50 && v1 > v2) {
-            MMatch.setText( df.format(((1 / (v1)) * 100)) + " - " + NomeCasa.getText());
-        }
-        if (v2 > 50 && v2 > v1) {
-            MMatch.setText(df.format(((1 / (v2)) * 100)) + " - " + NomeFora.getText());
-        }
+        float v1 = Float.parseFloat(r1.getText().replace("%", "")), v2 = Float.parseFloat(r2.getText().replace("%", ""));
 
-        if (v1 > v2) {
-            if ((v1 - v2) > 22 && progVit.getValue() > 49) {
-                MMatch.setText(df.format(((1 / (v1)) * 100)) + " - " + NomeCasa.getText());
-            }
-        }
-        if ((v1 - v2) < (-22) && progVit1.getValue() > 49) {
-            MMatch.setText(df.format(((1 / v2) * 100)) + " - " + NomeFora.getText());
-        }
+        //**************decis„o de prognostico H2H****************
+        MMatch.setText(f.progH2H(v1, v2, NomeCasa, NomeFora, progVit, progVit1));
 
-        //Mercado de Gols
+        //**************decis„o de prognostico Gols****************
         float munder = Integer.parseInt(this.under.getText()), mover = Integer.parseInt(this.over.getText());
         float munder1 = Integer.parseInt(this.under1.getText()), mover1 = Integer.parseInt(this.over1.getText());
 
@@ -2418,832 +2332,863 @@ public class Analise extends javax.swing.JFrame {
                 } else {
                     MGols.setText((float) (1 / ((mover + mover1) * 5)) * 100 + " - Over 2.5");
                 }
+            }}
+
+            //**************BTS****************
+            float golsComp[] = {
+                Float.parseFloat(mm.getText()),
+                Float.parseFloat(ms.getText()),
+                Float.parseFloat(mm1.getText()),
+                Float.parseFloat(ms1.getText()),
+                Float.parseFloat(marca.getText()),
+                Float.parseFloat(sofre.getText()),
+                Float.parseFloat(marca1.getText()),
+                Float.parseFloat(sofre1.getText()),
+                Float.parseFloat(TableCasaFora.getRowCount() + "")
+            };
+            if (MMatch.getText().equals("")) {
+                f.gerarBTS(golsComp);
+            } else if (MGols.getText().equals("")) {
+                f.gerarBTS(golsComp);
+            } else if (BTS.getText().equals("")) {
+                f.gerarBTS(golsComp);
             }
-        }
 
-        dados.add(2, MMatch.getText());
-        dados.add(3, MGols.getText());
+            dados.add(2, MMatch.getText());
+            dados.add(3, MGols.getText());
+            dados.add(4, BTS.getText());
 
-        //preenchendo Live
-        url = url.replace("prelive", "live");
-
-        doc = Jsoup.connect(url).get();
-        //String[] placar;
-
-        //int qtd = doc.getElementsByTag("tbody").size();
-        Elements live = doc.getElementsByClass("stats-game-head-date").select("li");
-
-        jt1.setText(live.get(0).text());
-        jt2.setText(live.get(2).text().replace("'", ""));
-        jt3.setText(live.get(3).text());
-        jt4.setText(live.get(4).text());
-        jt5.setText(live.get(5).text());
-
-        //odds das casas
-        try {
-
+            //preenchendo Live
             url = url.replace("prelive", "live");
-            url = url.replace("live", "odds");
 
             doc = Jsoup.connect(url).get();
+            //String[] placar;
 
-            //JOptionPane.showMessageDialog(null, url);
+            //int qtd = doc.getElementsByTag("tbody").size();
+            Elements live = doc.getElementsByClass("stats-game-head-date").select("li");
+
+            jt1.setText(live.get(0).text());
+            jt2.setText(live.get(2).text().replace("'", ""));
+            jt3.setText(live.get(3).text());
+            jt4.setText(live.get(4).text());
+            jt5.setText(live.get(5).text());
+
+            //odds das casas
             try {
-                Element stats = doc.getElementsByClass("stats_odds").select("tbody").get(1);
-                oddBet.setText("BetFair: " + stats.getElementsByClass("align_odds").get(0).text());
-                oddBet1.setText("BetFair: " + stats.getElementsByClass("align_odds").get(1).text());
-            } catch (Exception e) {
+
+                url = url.replace("prelive", "odds");
+
+                doc = Jsoup.connect(url).get();
+
+                //JOptionPane.showMessageDialog(null, url);
+                try {
+                    Element stats = doc.getElementsByClass("stats_odds").select("tbody").get(1);
+                    oddBet.setText("BetFair: " + stats.getElementsByClass("align_odds").get(0).text());
+                    oddBet1.setText("BetFair: " + stats.getElementsByClass("align_odds").get(1).text());
+                } catch (Exception e) {
+                    oddBet.setText("");
+                    oddBet1.setText("");
+                }
+
+            } catch (IOException e) {
                 oddBet.setText("");
                 oddBet1.setText("");
             }
 
-        } catch (IOException e) {
-            oddBet.setText("");
-            oddBet1.setText("");
-        }
+            try {
 
-        //thread para jogos ao vivo
-        if (!jt2.getText().equals("Agendado") || !jt2.getText().equals("Terminado")) {
+                ImageIcon icon = f.buscarImagem(jt4.getText(), deAccent(jLabelCasa.getText()),
+                        logog.getWidth(), logog.getWidth());
 
-            //Rel√≥gio
-            new Thread() {
-                public void run() {
-                    try {
-                        int tempo = 0;
-                        progUt.setValue(0);
-                        progHt.setValue(0);
+                icon.setImage(icon.getImage().getScaledInstance(logog.getWidth(), logog.getHeight(), 1));
+                logog.setIcon(icon);
+                logo.setIcon(icon);
 
-                        if (Integer.parseInt(jt2.getText()) <= 45) {
-                            progHt.setValue(Integer.parseInt(jt2.getText()));
-                        } else {
-                            progHt.setValue(45);
-                            progUt.setValue(Integer.parseInt(jt2.getText()));
-                        }
+                NomeCasa.setText(jLabelCasa.getText());
 
-                        while (true) {
+            } catch (Exception e) {
 
-                            jt2.setText(jt2.getText() + "'");
-                            sleep(1000);
-                            jt2.setText(jt2.getText().replace("'", ""));
-                            sleep(1000);
-                            tempo += 2;
-                            if (tempo == 60) {
-                                jt2.setText(((Integer.parseInt(jt2.getText().replace("'", ""))) + 1) + "");
-                                tempo = 0;
-                                sleep(1000);
-                                if (progHt.getValue() < 45) {
-                                    progHt.setValue(progHt.getValue() + 1);
-                                } else {
-                                    progUt.setValue(progUt.getValue() + 1);
-                                }
+            }
+            try {
 
+                ImageIcon icon = f.buscarImagem(jt4.getText(), deAccent(jLabelCasa1.getText()),
+                        logog1.getWidth(), logog1.getHeight());
+
+                icon.setImage(icon.getImage().getScaledInstance(logog1.getWidth(), logog1.getHeight(), 1));
+                logog1.setIcon(icon);
+                logo1.setIcon(icon);
+
+                NomeFora.setText(jLabelCasa1.getText());
+
+            } catch (Exception e) {
+
+            }
+
+            //thread para jogos ao vivo
+            if (!jt2.getText().equals("Agendado") || !jt2.getText().equals("Terminado")) {
+
+                //Rel√≥gio
+                new Thread() {
+                    public void run() {
+                        try {
+                            int tempo = 0;
+                            progUt.setValue(0);
+                            progHt.setValue(0);
+
+                            if (Integer.parseInt(jt2.getText()) <= 45) {
+                                progHt.setValue(Integer.parseInt(jt2.getText()));
+                            } else {
+                                progHt.setValue(45);
+                                progUt.setValue(Integer.parseInt(jt2.getText()));
                             }
+
+                            while (true) {
+
+                                jt2.setText(jt2.getText() + "'");
+                                sleep(1000);
+                                jt2.setText(jt2.getText().replace("'", ""));
+                                sleep(1000);
+                                tempo += 2;
+                                if (tempo == 60) {
+                                    jt2.setText(((Integer.parseInt(jt2.getText().replace("'", ""))) + 1) + "");
+                                    tempo = 0;
+                                    sleep(1000);
+                                    if (progHt.getValue() < 45) {
+                                        progHt.setValue(progHt.getValue() + 1);
+                                    } else {
+                                        progUt.setValue(progUt.getValue() + 1);
+                                    }
+
+                                }
+                            }
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(Analise.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(Analise.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                }
-            }.start();
+                }.start();
+
+            }
+            return dados;
 
         }
-        return dados;
-
-    }
-
+        /**
+         *
+         * @param url link do confronto
+         * @return Array(nomecasa,nomefora,progH2H,progGols)
+         * @throws IOException
+         */
     public ArrayList desempenhoLoop(String url) throws IOException {
 
-        //********************Determinando Time da Casa***********************    
-        
-        try {
-            
-        
-        String n1, n2;
-
-        int c1 = 0, c2 = 0, vit = 0, der = 0, emp = 0, gols = 0, golm = 0, nm = 0, ns = 0, vunder = 0, vover = 0;
         ArrayList dados = new ArrayList();
-        dados.clear();
-        float ngm = 0, ngs = 0;
-        DefaultTableModel desemp = (DefaultTableModel) TableCasaFora.getModel();
-        DefaultTableModel desemp2 = (DefaultTableModel) TableCasaFora2.getModel();
 
-        n1 = desemp.getValueAt(0, 0).toString();
-        n2 = desemp.getValueAt(0, 3).toString();
-        for (int i = 0; i < desemp.getRowCount(); i++) {
-            if (n1.equals(desemp.getValueAt(i, 0)) || n1.equals(desemp.getValueAt(i, 3))) {
-                c1++;
+        //********************Determinando Time da Casa***********************    
+        try {
+
+            String n1, n2;
+
+            int c1 = 0, c2 = 0, vit = 0, der = 0, emp = 0, gols = 0, golm = 0, nm = 0, ns = 0, vunder = 0, vover = 0;
+
+            dados.clear();
+            float ngm = 0, ngs = 0;
+            DefaultTableModel desemp = (DefaultTableModel) TableCasaFora.getModel();
+            DefaultTableModel desemp2 = (DefaultTableModel) TableCasaFora2.getModel();
+
+            n1 = desemp.getValueAt(0, 0).toString();
+            n2 = desemp.getValueAt(0, 3).toString();
+            for (int i = 0; i < desemp.getRowCount(); i++) {
+                if (n1.equals(desemp.getValueAt(i, 0)) || n1.equals(desemp.getValueAt(i, 3))) {
+                    c1++;
+                }
+                if (n2.equals(desemp.getValueAt(i, 0)) || n2.equals(desemp.getValueAt(i, 3))) {
+                    c2++;
+                }
+
+                //System.out.println(desemp.getValueAt(i, 0)+" x "+desemp.getValueAt(i, 3));
             }
-            if (n2.equals(desemp.getValueAt(i, 0)) || n2.equals(desemp.getValueAt(i, 3))) {
-                c2++;
-            }
-
-            //System.out.println(desemp.getValueAt(i, 0)+" x "+desemp.getValueAt(i, 3));
-        }
-        if (c1 > c2) {
-            jLabelCasa.setText(n1);
-        } else {
-            jLabelCasa.setText(n2);
-        }
-
-        String timeCasa = jLabelCasa.getText();
-
-        dados.add(0, jLabelCasa.getText());
-        //********************************************************************
-
-        for (int i = 0; i < desemp.getRowCount(); i++) {
-            c1 = Integer.parseInt(desemp.getValueAt(i, 1).toString());
-            c2 = Integer.parseInt(desemp.getValueAt(i, 2).toString());
-
-            if ((c1 + c2) > 2) {
-                vover++;
-            }
-            if ((c1 + c2) < 2) {
-                vunder++;
-            }
-
-            if (timeCasa.equals(desemp.getValueAt(i, 0))) {
-
-                ngm += c1;
-                ngs += c2;
-
-                if (c2 > 0) {
-                    ns++;
-                }
-                if (c1 > 0) {
-                    nm++;
-                }
-                if (c1 > c2) {
-                    vit++;
-                    golm = c1;
-                    gols = c2;
-                }
-                if (c1 == c2) {
-                    emp++;
-                    golm = c1;
-                    gols = c2;
-                }
-                if (c1 < c2) {
-                    der++;
-                    golm = c1;
-                    gols = c2;
-                }
+            if (c1 > c2) {
+                jLabelCasa.setText(n1);
             } else {
-
-                ngm += c2;
-                ngs += c1;
-
-                if (c2 > 0) {
-                    ns++;
-                }
-                if (c1 > 0) {
-                    nm++;
-                }
-
-                if (c1 > c2) {
-                    der++;
-                    golm = c2;
-                    gols = c1;
-                }
-                if (c1 == c2) {
-                    emp++;
-                    golm = c2;
-                    gols = c1;
-                }
-                if (c1 < c2) {
-                    vit++;
-                    golm = c2;
-                    gols = c1;
-                }
+                jLabelCasa.setText(n2);
             }
 
-        }
+            String timeCasa = jLabelCasa.getText();
 
-        vitorias.setText(vit + "");//vitorias nos 10 jogods
-        derrotas.setText(der + "");
-        empates.setText(emp + "");
-        marca.setText(nm + " Jogos");
-        sofre.setText(ns + " Jogos");
-        under.setText(vunder + "");
-        over.setText(vover + "");
-        mm.setText(ngm / 10 + "");
-        ms.setText(ngs / 10 + "");
+            dados.add(0, jLabelCasa.getText());
+            //********************************************************************
 
-        c1 = 0;
-        c2 = 0;
-        vit = 0;
-        der = 0;
-        emp = 0;
-        gols = 0;
-        golm = 0;
-        nm = 0;
-        ns = 0;
-        vunder = 0;
-        vover = 0;
-        ngm = 0;
-        ngs = 0;
+            for (int i = 0; i < desemp.getRowCount(); i++) {
+                c1 = Integer.parseInt(desemp.getValueAt(i, 1).toString());
+                c2 = Integer.parseInt(desemp.getValueAt(i, 2).toString());
 
-        n1 = desemp2.getValueAt(0, 0).toString();
-        n2 = desemp2.getValueAt(0, 3).toString();
-        for (int i = 0; i < desemp2.getRowCount(); i++) {
-            if (n1.equals(desemp2.getValueAt(i, 0)) || n1.equals(desemp2.getValueAt(i, 3))) {
-                c1++;
+                if ((c1 + c2) > 2) {
+                    vover++;
+                }
+                if ((c1 + c2) < 2) {
+                    vunder++;
+                }
+
+                if (timeCasa.equals(desemp.getValueAt(i, 0))) {
+
+                    ngm += c1;
+                    ngs += c2;
+
+                    if (c2 > 0) {
+                        ns++;
+                    }
+                    if (c1 > 0) {
+                        nm++;
+                    }
+                    if (c1 > c2) {
+                        vit++;
+                        golm = c1;
+                        gols = c2;
+                    }
+                    if (c1 == c2) {
+                        emp++;
+                        golm = c1;
+                        gols = c2;
+                    }
+                    if (c1 < c2) {
+                        der++;
+                        golm = c1;
+                        gols = c2;
+                    }
+                } else {
+
+                    ngm += c2;
+                    ngs += c1;
+
+                    if (c2 > 0) {
+                        ns++;
+                    }
+                    if (c1 > 0) {
+                        nm++;
+                    }
+
+                    if (c1 > c2) {
+                        der++;
+                        golm = c2;
+                        gols = c1;
+                    }
+                    if (c1 == c2) {
+                        emp++;
+                        golm = c2;
+                        gols = c1;
+                    }
+                    if (c1 < c2) {
+                        vit++;
+                        golm = c2;
+                        gols = c1;
+                    }
+                }
+
             }
-            if (n2.equals(desemp2.getValueAt(i, 0)) || n2.equals(desemp2.getValueAt(i, 3))) {
-                c2++;
+
+            vitorias.setText(vit + "");//vitorias nos 10 jogods
+            derrotas.setText(der + "");
+            empates.setText(emp + "");
+            marca.setText(nm + "");
+            sofre.setText(ns + "");
+            under.setText(vunder + "");
+            over.setText(vover + "");
+            mm.setText(ngm / 10 + "");
+            ms.setText(ngs / 10 + "");
+
+            c1 = 0;
+            c2 = 0;
+            vit = 0;
+            der = 0;
+            emp = 0;
+            gols = 0;
+            golm = 0;
+            nm = 0;
+            ns = 0;
+            vunder = 0;
+            vover = 0;
+            ngm = 0;
+            ngs = 0;
+
+            n1 = desemp2.getValueAt(0, 0).toString();
+            n2 = desemp2.getValueAt(0, 3).toString();
+            for (int i = 0; i < desemp2.getRowCount(); i++) {
+                if (n1.equals(desemp2.getValueAt(i, 0)) || n1.equals(desemp2.getValueAt(i, 3))) {
+                    c1++;
+                }
+                if (n2.equals(desemp2.getValueAt(i, 0)) || n2.equals(desemp2.getValueAt(i, 3))) {
+                    c2++;
+                }
+
+                //System.out.println(desemp.getValueAt(i, 0)+" x "+desemp.getValueAt(i, 3));
             }
-
-            //System.out.println(desemp.getValueAt(i, 0)+" x "+desemp.getValueAt(i, 3));
-        }
-        if (c1 > c2) {
-            jLabelCasa1.setText(n1);
-        } else {
-            jLabelCasa1.setText(n2);
-        }
-
-        String timeCasa2 = jLabelCasa1.getText();
-
-        dados.add(1, jLabelCasa1.getText());
-
-        //********************************************************************
-        for (int i = 0; i < desemp2.getRowCount(); i++) {
-            c1 = Integer.parseInt(desemp2.getValueAt(i, 1).toString());
-            c2 = Integer.parseInt(desemp2.getValueAt(i, 2).toString());
-
-            if ((c1 + c2) > 2) {
-                vover++;
-            }
-            if ((c1 + c2) < 2) {
-                vunder++;
-            }
-
-            if (timeCasa2.equals(desemp2.getValueAt(i, 0))) {
-
-                ngm += c1;
-                ngs += c2;
-
-                if (c2 > 0) {
-                    ns++;
-
-                }
-                if (c1 > 0) {
-                    nm++;
-
-                }
-                if (c1 > c2) {
-                    vit++;
-                    golm = c1;
-                    gols = c2;
-                }
-                if (c1 == c2) {
-                    emp++;
-                    golm = c1;
-                    gols = c2;
-                }
-                if (c1 < c2) {
-                    der++;
-                    golm = c1;
-                    gols = c2;
-                }
+            if (c1 > c2) {
+                jLabelCasa1.setText(n1);
             } else {
-
-                if (c2 > 0) {
-                    ns++;
-                }
-                if (c1 > 0) {
-                    nm++;
-                }
-
-                if (c1 > c2) {
-                    der++;
-                    golm = c2;
-                    gols = c1;
-                }
-                if (c1 == c2) {
-                    emp++;
-                    golm = c2;
-                    gols = c1;
-                }
-                if (c1 < c2) {
-                    vit++;
-                    golm = c2;
-                    gols = c1;
-                }
+                jLabelCasa1.setText(n2);
             }
 
-        }
+            String timeCasa2 = jLabelCasa1.getText();
 
-        vitorias1.setText(vit + "");
-        derrotas1.setText(der + "");
-        empates1.setText(emp + "");
-        marca1.setText(nm + " Jogos");
-        sofre1.setText(ns + " Jogos");
-        under1.setText(vunder + "");
-        over1.setText(vover + "");
-        mm1.setText(ngm / 10 + "");
-        ms1.setText(ngs / 10 + "");
+            dados.add(1, jLabelCasa1.getText());
 
-        ///**************Criando Graficos*************
-        Document doc;
-        doc = Jsoup.connect(url).get();
-        String[] golsMarcados = null;
-        float vit1 = 0;
-        float der1 = 0;
-        float maior1 = 0;
-        float menor1 = 0;
+            //********************************************************************
+            for (int i = 0; i < desemp2.getRowCount(); i++) {
+                c1 = Integer.parseInt(desemp2.getValueAt(i, 1).toString());
+                c2 = Integer.parseInt(desemp2.getValueAt(i, 2).toString());
 
-        emp = 0; //reaproveitada para contas os jogos em casa ou fora
-        int controle = 0;
-        float val, golsS = 0, golsM = 0;
-        ArrayList golsC = new ArrayList();
-        ArrayList nomes = new ArrayList();
+                if ((c1 + c2) > 2) {
+                    vover++;
+                }
+                if ((c1 + c2) < 2) {
+                    vunder++;
+                }
 
-        while (controle < 9) {
-            while (!TableCasaFora.getValueAt(controle, 0).toString().equals(jLabelCasa.getText())) {
-                //JOptionPane.showMessageDialog(null, "linha = "+controle+" "+TableCasaFora.getValueAt(controle, 0).toString());
-                controle++;
+                if (timeCasa2.equals(desemp2.getValueAt(i, 0))) {
+
+                    ngm += c1;
+                    ngs += c2;
+
+                    if (c2 > 0) {
+                        ns++;
+
+                    }
+                    if (c1 > 0) {
+                        nm++;
+
+                    }
+                    if (c1 > c2) {
+                        vit++;
+                        golm = c1;
+                        gols = c2;
+                    }
+                    if (c1 == c2) {
+                        emp++;
+                        golm = c1;
+                        gols = c2;
+                    }
+                    if (c1 < c2) {
+                        der++;
+                        golm = c1;
+                        gols = c2;
+                    }
+                } else {
+
+                    if (c2 > 0) {
+                        ns++;
+                    }
+                    if (c1 > 0) {
+                        nm++;
+                    }
+
+                    if (c1 > c2) {
+                        der++;
+                        golm = c2;
+                        gols = c1;
+                    }
+                    if (c1 == c2) {
+                        emp++;
+                        golm = c2;
+                        gols = c1;
+                    }
+                    if (c1 < c2) {
+                        vit++;
+                        golm = c2;
+                        gols = c1;
+                    }
+                }
+
+            }
+
+            vitorias1.setText(vit + "");
+            derrotas1.setText(der + "");
+            empates1.setText(emp + "");
+            marca1.setText(nm + "");
+            sofre1.setText(ns + "");
+            under1.setText(vunder + "");
+            over1.setText(vover + "");
+            mm1.setText(ngm / 10 + "");
+            ms1.setText(ngs / 10 + "");
+
+            ///**************Criando Graficos*************
+            String[] golsMarcados = null;
+            float vit1 = 0;
+            float der1 = 0;
+            float maior1 = 0;
+            float menor1 = 0;
+
+            emp = 0; //reaproveitada para contas os jogos em casa ou fora
+            int controle = 0;
+            float val, golsS = 0, golsM = 0;
+            ArrayList golsC = new ArrayList();
+            ArrayList nomes = new ArrayList();
+
+            while (controle < 9) {
+                while (!TableCasaFora.getValueAt(controle, 0).toString().equals(jLabelCasa.getText())) {
+                    //JOptionPane.showMessageDialog(null, "linha = "+controle+" "+TableCasaFora.getValueAt(controle, 0).toString());
+                    controle++;
+                    if (controle > TableCasaFora.getRowCount() - 1) {
+                        break;
+                    }
+                    emp++;
+
+                    //preenchendo quadro V-E-D em geral
+                }
+
+                //JOptionPane.showMessageDialog(null, "linha = "+controle+"Casa  "+TableCasaFora.getValueAt(controle, 0).toString());
                 if (controle > TableCasaFora.getRowCount() - 1) {
                     break;
                 }
-                emp++;
-
-                //preenchendo quadro V-E-D em geral
-            }
-
-            //JOptionPane.showMessageDialog(null, "linha = "+controle+"Casa  "+TableCasaFora.getValueAt(controle, 0).toString());
-            if (controle > TableCasaFora.getRowCount() - 1) {
-                break;
-            }
-            golsC.add(Integer.parseInt(TableCasaFora.getValueAt(controle, 1).toString()));//gols em casa
-            golsC.add(Integer.parseInt(TableCasaFora.getValueAt(controle, 2).toString()));//sofridos em casa
-            nomes.add(TableCasaFora.getValueAt(controle, 3).toString());
-            controle++;
-        }
-
-        int x = 0;
-        int count = 0;
-
-        while (Integer.parseInt(golsC.get(x).toString()) >= Integer.parseInt(golsC.get(x + 1).toString())) {
-
-            //JOptionPane.showMessageDialog(null, Integer.parseInt(golsC.get(x).toString())+" - "+Integer.parseInt(golsC.get(x + 1).toString()));
-            x += 2;
-            count++;
-            if (x > golsC.size() - 1) {
-                break;
-            }
-        }
-        lnp1.setText(count + "");
-
-        x = 0;
-
-        if (golsC.size() > x) {
-            golsM += (Integer.parseInt(golsC.get(x).toString().trim()));
-            golsS += (Integer.parseInt(golsC.get(x + 1).toString().trim()));
-            if ((Integer.parseInt(golsC.get(x).toString().trim())) > Integer.parseInt(golsC.get(x + 1).toString().trim())) {
-                val = (float) 1;
-                vit1++;
-
-                if ((Integer.parseInt(golsC.get(x).toString().trim())) - Integer.parseInt(golsC.get(x + 1).toString().trim()) > 1) {
-                    maior1++;
-                }
-            } else {
-                if ((Integer.parseInt(golsC.get(x).toString().trim())) == Integer.parseInt(golsC.get(x + 1).toString().trim())) {
-                    val = (float) 0.5;
-                } else {
-                    val = 0;
-                    der1++;
-                    if (Integer.parseInt(golsC.get(x + 1).toString().trim()) - Integer.parseInt(golsC.get(x).toString().trim()) > 1) {
-                        menor1++;
-                    }
-                }
-
-            }
-
-        }
-
-        x += 2;
-
-        if (golsC.size() > x) {
-            golsM += (Integer.parseInt(golsC.get(x).toString().trim()));
-            golsS += (Integer.parseInt(golsC.get(x + 1).toString().trim()));
-            if ((Integer.parseInt(golsC.get(x).toString().trim())) > Integer.parseInt(golsC.get(x + 1).toString().trim())) {
-                val = (float) 1;
-                vit1++;
-                if ((Integer.parseInt(golsC.get(x).toString().trim())) - Integer.parseInt(golsC.get(x + 1).toString().trim()) > 1) {
-                    maior1++;
-                }
-            } else {
-                if ((Integer.parseInt(golsC.get(x).toString().trim())) == Integer.parseInt(golsC.get(x + 1).toString().trim())) {
-                    val = (float) 0.5;
-                } else {
-                    val = 0;
-                    der1++;
-                    if (Integer.parseInt(golsC.get(x + 1).toString().trim()) - Integer.parseInt(golsC.get(x).toString().trim()) > 1) {
-                        menor1++;
-                    }
-                }
-            }
-
-        }
-
-        x += 2;
-
-        if (golsC.size() > x) {
-            golsM += (Integer.parseInt(golsC.get(x).toString().trim()));
-            golsS += (Integer.parseInt(golsC.get(x + 1).toString().trim()));
-            if ((Integer.parseInt(golsC.get(x).toString().trim())) > Integer.parseInt(golsC.get(x + 1).toString().trim())) {
-                val = (float) 1;
-                vit1++;
-                if ((Integer.parseInt(golsC.get(x).toString().trim())) - Integer.parseInt(golsC.get(x + 1).toString().trim()) > 1) {
-                    maior1++;
-                }
-            } else {
-                if ((Integer.parseInt(golsC.get(x).toString().trim())) == Integer.parseInt(golsC.get(x + 1).toString().trim())) {
-                    val = (float) 0.5;
-                } else {
-                    val = 0;
-                    der1++;
-                    if (Integer.parseInt(golsC.get(x + 1).toString().trim()) - Integer.parseInt(golsC.get(x).toString().trim()) > 1) {
-                        menor1++;
-                    }
-                }
-            }
-
-        }
-
-        x += 2;
-
-        if (golsC.size() > x) {
-            golsM += (Integer.parseInt(golsC.get(x).toString().trim()));
-            golsS += (Integer.parseInt(golsC.get(x + 1).toString().trim()));
-            if ((Integer.parseInt(golsC.get(x).toString().trim())) > Integer.parseInt(golsC.get(x + 1).toString().trim())) {
-                val = (float) 1;
-                vit1++;
-                if ((Integer.parseInt(golsC.get(x).toString().trim())) - Integer.parseInt(golsC.get(x + 1).toString().trim()) > 1) {
-                    maior1++;
-                }
-            } else {
-                if ((Integer.parseInt(golsC.get(x).toString().trim())) == Integer.parseInt(golsC.get(x + 1).toString().trim())) {
-                    val = (float) 0.5;
-                } else {
-                    val = 0;
-                    der1++;
-                    if (Integer.parseInt(golsC.get(x + 1).toString().trim()) - Integer.parseInt(golsC.get(x).toString().trim()) > 1) {
-                        menor1++;
-                    }
-                }
-            }
-
-        }
-
-        x += 2;
-
-        if (golsC.size() > x) {
-            golsM += (Integer.parseInt(golsC.get(x).toString().trim()));
-            golsS += (Integer.parseInt(golsC.get(x + 1).toString().trim()));
-            if ((Integer.parseInt(golsC.get(x).toString().trim())) > Integer.parseInt(golsC.get(x + 1).toString().trim())) {
-                val = (float) 1;
-                vit1++;
-                if ((Integer.parseInt(golsC.get(x).toString().trim())) - Integer.parseInt(golsC.get(x + 1).toString().trim()) > 1) {
-                    maior1++;
-                }
-            } else {
-                if ((Integer.parseInt(golsC.get(x).toString().trim())) == Integer.parseInt(golsC.get(x + 1).toString().trim())) {
-                    val = (float) 0.5;
-                } else {
-                    val = 0;
-                    der1++;
-                    if (Integer.parseInt(golsC.get(x + 1).toString().trim()) - Integer.parseInt(golsC.get(x).toString().trim()) > 1) {
-                        menor1++;
-                    }
-                }
-            }
-
-        }
-
-        progVit.setValue((int) (vit1 / emp * 100));
-        progDer.setValue((int) (der1 / emp * 100));
-        progMaior.setValue((int) (maior1 / emp * 100));
-        progMenor.setValue((int) (menor1 / emp * 100));
-
-        lGolsM.setText((int) golsM + "");
-        lGolsS.setText((int) golsS + "");
-        lvit.setText((int) vit1 + "");
-
-        //grafico fora
-        controle = 0;
-        vit1 = 0;
-        der1 = 0;
-        maior1 = 0;
-        menor1 = 0;
-        golsS = 0;
-        golsM = 0;
-
-        golsC.clear();
-        nomes.clear();
-
-        while (controle < 9) {
-            while (!TableCasaFora2.getValueAt(controle, 3).toString().equals(jLabelCasa1.getText())) {
-                //JOptionPane.showMessageDialog(null, "linha = "+controle+" "+TableCasaFora.getValueAt(controle, 0).toString());
+                golsC.add(Integer.parseInt(TableCasaFora.getValueAt(controle, 1).toString()));//gols em casa
+                golsC.add(Integer.parseInt(TableCasaFora.getValueAt(controle, 2).toString()));//sofridos em casa
+                nomes.add(TableCasaFora.getValueAt(controle, 3).toString());
                 controle++;
-                if (controle >= TableCasaFora2.getRowCount() - 1) {
+            }
+
+            int x = 0;
+            int count = 0;
+
+            while (Integer.parseInt(golsC.get(x).toString()) >= Integer.parseInt(golsC.get(x + 1).toString())) {
+
+                //JOptionPane.showMessageDialog(null, Integer.parseInt(golsC.get(x).toString())+" - "+Integer.parseInt(golsC.get(x + 1).toString()));
+                x += 2;
+                count++;
+                if (x > golsC.size() - 1) {
                     break;
                 }
             }
+            lnp1.setText(count + "");
 
-            //JOptionPane.showMessageDialog(null, "linha = "+controle+"Casa  "+TableCasaFora.getValueAt(controle, 0).toString());
-            if (controle >= TableCasaFora.getRowCount() - 1) {
-                break;
+            x = 0;
+
+            if (golsC.size() > x) {
+                golsM += (Integer.parseInt(golsC.get(x).toString().trim()));
+                golsS += (Integer.parseInt(golsC.get(x + 1).toString().trim()));
+                if ((Integer.parseInt(golsC.get(x).toString().trim())) > Integer.parseInt(golsC.get(x + 1).toString().trim())) {
+                    val = (float) 1;
+                    vit1++;
+
+                    if ((Integer.parseInt(golsC.get(x).toString().trim())) - Integer.parseInt(golsC.get(x + 1).toString().trim()) > 1) {
+                        maior1++;
+                    }
+                } else {
+                    if ((Integer.parseInt(golsC.get(x).toString().trim())) == Integer.parseInt(golsC.get(x + 1).toString().trim())) {
+                        val = (float) 0.5;
+                    } else {
+                        val = 0;
+                        der1++;
+                        if (Integer.parseInt(golsC.get(x + 1).toString().trim()) - Integer.parseInt(golsC.get(x).toString().trim()) > 1) {
+                            menor1++;
+                        }
+                    }
+
+                }
+
             }
-            //JOptionPane.showMessageDialog(null, TableCasaFora.getRowCount() - 1+"/"+controle);
-            golsC.add(Integer.parseInt(TableCasaFora2.getValueAt(controle, 2).toString()));
-            golsC.add(Integer.parseInt(TableCasaFora2.getValueAt(controle, 1).toString()));
-            nomes.add(TableCasaFora2.getValueAt(controle, 0).toString());
-            controle++;
-        }
 
-        x = 0;
-        count = 0;
-
-        while (Integer.parseInt(golsC.get(x).toString()) >= Integer.parseInt(golsC.get(x + 1).toString())) {
-
-            //JOptionPane.showMessageDialog(null, Integer.parseInt(golsC.get(x).toString())+" - "+Integer.parseInt(golsC.get(x + 1).toString()));
             x += 2;
-            count++;
-            if (x > golsC.size() - 1) {
-                break;
-            }
-        }
-        lnp.setText(count + "");
 
-        x = 0;
-
-        if (golsC.size() > x) {
-            golsM += (Integer.parseInt(golsC.get(x).toString().trim()));
-            golsS += (Integer.parseInt(golsC.get(x + 1).toString().trim()));
-            if ((Integer.parseInt(golsC.get(x).toString().trim())) > Integer.parseInt(golsC.get(x + 1).toString().trim())) {
-                val = (float) 1;
-                vit1++;
-                if ((Integer.parseInt(golsC.get(x).toString().trim())) - Integer.parseInt(golsC.get(x + 1).toString().trim()) > 1) {
-                    maior1++;
-                }
-            } else {
-                if ((Integer.parseInt(golsC.get(x).toString().trim())) == Integer.parseInt(golsC.get(x + 1).toString().trim())) {
-                    val = (float) 0.5;
+            if (golsC.size() > x) {
+                golsM += (Integer.parseInt(golsC.get(x).toString().trim()));
+                golsS += (Integer.parseInt(golsC.get(x + 1).toString().trim()));
+                if ((Integer.parseInt(golsC.get(x).toString().trim())) > Integer.parseInt(golsC.get(x + 1).toString().trim())) {
+                    val = (float) 1;
+                    vit1++;
+                    if ((Integer.parseInt(golsC.get(x).toString().trim())) - Integer.parseInt(golsC.get(x + 1).toString().trim()) > 1) {
+                        maior1++;
+                    }
                 } else {
-                    val = 0;
-                    der1++;
-                    if (Integer.parseInt(golsC.get(x + 1).toString().trim()) - Integer.parseInt(golsC.get(x).toString().trim()) > 1) {
-                        menor1++;
+                    if ((Integer.parseInt(golsC.get(x).toString().trim())) == Integer.parseInt(golsC.get(x + 1).toString().trim())) {
+                        val = (float) 0.5;
+                    } else {
+                        val = 0;
+                        der1++;
+                        if (Integer.parseInt(golsC.get(x + 1).toString().trim()) - Integer.parseInt(golsC.get(x).toString().trim()) > 1) {
+                            menor1++;
+                        }
                     }
                 }
 
             }
 
-        }
+            x += 2;
 
-        x += 2;
-
-        if (golsC.size() > x) {
-            golsM += (Integer.parseInt(golsC.get(x).toString().trim()));
-            golsS += (Integer.parseInt(golsC.get(x + 1).toString().trim()));
-            if ((Integer.parseInt(golsC.get(x).toString().trim())) > Integer.parseInt(golsC.get(x + 1).toString().trim())) {
-                val = (float) 1;
-                vit1++;
-                if ((Integer.parseInt(golsC.get(x).toString().trim())) - Integer.parseInt(golsC.get(x + 1).toString().trim()) > 1) {
-                    maior1++;
-                }
-            } else {
-                if ((Integer.parseInt(golsC.get(x).toString().trim())) == Integer.parseInt(golsC.get(x + 1).toString().trim())) {
-                    val = (float) 0.5;
+            if (golsC.size() > x) {
+                golsM += (Integer.parseInt(golsC.get(x).toString().trim()));
+                golsS += (Integer.parseInt(golsC.get(x + 1).toString().trim()));
+                if ((Integer.parseInt(golsC.get(x).toString().trim())) > Integer.parseInt(golsC.get(x + 1).toString().trim())) {
+                    val = (float) 1;
+                    vit1++;
+                    if ((Integer.parseInt(golsC.get(x).toString().trim())) - Integer.parseInt(golsC.get(x + 1).toString().trim()) > 1) {
+                        maior1++;
+                    }
                 } else {
-                    val = 0;
-                    der1++;
-                    if (Integer.parseInt(golsC.get(x + 1).toString().trim()) - Integer.parseInt(golsC.get(x).toString().trim()) > 1) {
-                        menor1++;
+                    if ((Integer.parseInt(golsC.get(x).toString().trim())) == Integer.parseInt(golsC.get(x + 1).toString().trim())) {
+                        val = (float) 0.5;
+                    } else {
+                        val = 0;
+                        der1++;
+                        if (Integer.parseInt(golsC.get(x + 1).toString().trim()) - Integer.parseInt(golsC.get(x).toString().trim()) > 1) {
+                            menor1++;
+                        }
                     }
                 }
+
             }
 
-        }
+            x += 2;
 
-        x += 2;
-
-        if (golsC.size() > x) {
-            golsM += (Integer.parseInt(golsC.get(x).toString().trim()));
-            golsS += (Integer.parseInt(golsC.get(x + 1).toString().trim()));
-            if ((Integer.parseInt(golsC.get(x).toString().trim())) > Integer.parseInt(golsC.get(x + 1).toString().trim())) {
-                val = (float) 1;
-                vit1++;
-                if ((Integer.parseInt(golsC.get(x).toString().trim())) - Integer.parseInt(golsC.get(x + 1).toString().trim()) > 1) {
-                    maior1++;
-                }
-            } else {
-                if ((Integer.parseInt(golsC.get(x).toString().trim())) == Integer.parseInt(golsC.get(x + 1).toString().trim())) {
-                    val = (float) 0.5;
+            if (golsC.size() > x) {
+                golsM += (Integer.parseInt(golsC.get(x).toString().trim()));
+                golsS += (Integer.parseInt(golsC.get(x + 1).toString().trim()));
+                if ((Integer.parseInt(golsC.get(x).toString().trim())) > Integer.parseInt(golsC.get(x + 1).toString().trim())) {
+                    val = (float) 1;
+                    vit1++;
+                    if ((Integer.parseInt(golsC.get(x).toString().trim())) - Integer.parseInt(golsC.get(x + 1).toString().trim()) > 1) {
+                        maior1++;
+                    }
                 } else {
-                    val = 0;
-                    der1++;
-                    if (Integer.parseInt(golsC.get(x + 1).toString().trim()) - Integer.parseInt(golsC.get(x).toString().trim()) > 1) {
-                        menor1++;
+                    if ((Integer.parseInt(golsC.get(x).toString().trim())) == Integer.parseInt(golsC.get(x + 1).toString().trim())) {
+                        val = (float) 0.5;
+                    } else {
+                        val = 0;
+                        der1++;
+                        if (Integer.parseInt(golsC.get(x + 1).toString().trim()) - Integer.parseInt(golsC.get(x).toString().trim()) > 1) {
+                            menor1++;
+                        }
                     }
                 }
+
             }
 
-        }
+            x += 2;
 
-        x += 2;
-
-        if (golsC.size() > x) {
-            golsM += (Integer.parseInt(golsC.get(x).toString().trim()));
-            golsS += (Integer.parseInt(golsC.get(x + 1).toString().trim()));
-            if ((Integer.parseInt(golsC.get(x).toString().trim())) > Integer.parseInt(golsC.get(x + 1).toString().trim())) {
-                val = (float) 1;
-                vit1++;
-                if ((Integer.parseInt(golsC.get(x).toString().trim())) - Integer.parseInt(golsC.get(x + 1).toString().trim()) > 1) {
-                    maior1++;
-                }
-            } else {
-                if ((Integer.parseInt(golsC.get(x).toString().trim())) == Integer.parseInt(golsC.get(x + 1).toString().trim())) {
-                    val = (float) 0.5;
+            if (golsC.size() > x) {
+                golsM += (Integer.parseInt(golsC.get(x).toString().trim()));
+                golsS += (Integer.parseInt(golsC.get(x + 1).toString().trim()));
+                if ((Integer.parseInt(golsC.get(x).toString().trim())) > Integer.parseInt(golsC.get(x + 1).toString().trim())) {
+                    val = (float) 1;
+                    vit1++;
+                    if ((Integer.parseInt(golsC.get(x).toString().trim())) - Integer.parseInt(golsC.get(x + 1).toString().trim()) > 1) {
+                        maior1++;
+                    }
                 } else {
-                    val = 0;
-                    der1++;
-                    if (Integer.parseInt(golsC.get(x + 1).toString().trim()) - Integer.parseInt(golsC.get(x).toString().trim()) > 1) {
-                        menor1++;
+                    if ((Integer.parseInt(golsC.get(x).toString().trim())) == Integer.parseInt(golsC.get(x + 1).toString().trim())) {
+                        val = (float) 0.5;
+                    } else {
+                        val = 0;
+                        der1++;
+                        if (Integer.parseInt(golsC.get(x + 1).toString().trim()) - Integer.parseInt(golsC.get(x).toString().trim()) > 1) {
+                            menor1++;
+                        }
                     }
                 }
+
             }
 
-        }
+            progVit.setValue((int) (vit1 / emp * 100));
+            progDer.setValue((int) (der1 / emp * 100));
+            progMaior.setValue((int) (maior1 / emp * 100));
+            progMenor.setValue((int) (menor1 / emp * 100));
 
-        x += 2;
+            lGolsM.setText((int) golsM + "");
+            lGolsS.setText((int) golsS + "");
+            lvit.setText((int) vit1 + "");
 
-        if (golsC.size() > x) {
-            golsM += (Integer.parseInt(golsC.get(x).toString().trim()));
-            golsS += (Integer.parseInt(golsC.get(x + 1).toString().trim()));
-            if ((Integer.parseInt(golsC.get(x).toString().trim())) > Integer.parseInt(golsC.get(x + 1).toString().trim())) {
-                val = (float) 1;
-                vit1++;
-                if ((Integer.parseInt(golsC.get(x).toString().trim())) - Integer.parseInt(golsC.get(x + 1).toString().trim()) > 1) {
-                    maior1++;
-                }
-            } else {
-                if ((Integer.parseInt(golsC.get(x).toString().trim())) == Integer.parseInt(golsC.get(x + 1).toString().trim())) {
-                    val = (float) 0.5;
-                } else {
-                    val = 0;
-                    der1++;
-                    if (Integer.parseInt(golsC.get(x + 1).toString().trim()) - Integer.parseInt(golsC.get(x).toString().trim()) > 1) {
-                        menor1++;
+            //grafico fora
+            controle = 0;
+            vit1 = 0;
+            der1 = 0;
+            maior1 = 0;
+            menor1 = 0;
+            golsS = 0;
+            golsM = 0;
+
+            golsC.clear();
+            nomes.clear();
+
+            while (controle < 9) {
+
+                while (!TableCasaFora2.getValueAt(controle, 3).toString().equals(jLabelCasa1.getText())) {
+                    //  JOptionPane.showMessageDialog(null, "linha = " + controle + " " + TableCasaFora.getValueAt(controle, 0).toString());
+                    controle++;
+                    if (controle >= TableCasaFora2.getRowCount() - 1) {
+                        break;
                     }
                 }
+
+                //JOptionPane.showMessageDialog(null, "linha = "+controle+"Casa  "+TableCasaFora.getValueAt(controle, 0).toString());
+                if (controle >= TableCasaFora.getRowCount() - 1) {
+                    break;
+                }
+                //JOptionPane.showMessageDialog(null, TableCasaFora.getRowCount() - 1+"/"+controle);
+                golsC.add(Integer.parseInt(TableCasaFora2.getValueAt(controle, 2).toString()));
+                golsC.add(Integer.parseInt(TableCasaFora2.getValueAt(controle, 1).toString()));
+                nomes.add(TableCasaFora2.getValueAt(controle, 0).toString());
+
+                controle++;
             }
 
-        }
-        progVit1.setValue((int) (vit1 / emp * 100));
-        progDer1.setValue((int) (der1 / emp * 100));
-        progMaior1.setValue((int) (maior1 / emp * 100));
-        progMenor1.setValue((int) (menor1 / emp * 100));
+            x = 0;
+            count = 0;
 
-        lGolsS1.setText((int) golsS + "");
-        lGolsM1.setText((int) golsM + "");
-        lvit1.setText((int) vit1 + "");
+            while (Integer.parseInt(golsC.get(x).toString()) >= Integer.parseInt(golsC.get(x + 1).toString())) {
 
-        //Resultado Geral
-        float vitC = Integer.parseInt(vitorias.getText());
-        float derC = Integer.parseInt(derrotas.getText());
-        float vitC1 = 5;//Integer.parseInt(vitorias1.getText());
-        float derC1 = 2;//Integer.parseInt(derrotas1.getText());
-        float cap1 = ((vitC + derC1) / 20 * 100);
-        float cap2 = (vitC1 + derC) / 20 * 100;
-
-        //preenchendo V-D-E
-        ArrayList res = new ArrayList();
-        ArrayList res2 = new ArrayList();
-        res.clear();
-        res2.clear();
-
-        for (int a = 0; a < 5; a++) {
-            if ((TableCasaFora.getValueAt(a, 0).toString().trim()).equals(jLabelCasa.getText())) {
-                res.add(Integer.parseInt(TableCasaFora.getValueAt(a, 1).toString()) - Integer.parseInt(TableCasaFora.getValueAt(a, 2).toString()));
-            } else {
-                res.add(Integer.parseInt(TableCasaFora.getValueAt(a, 2).toString()) - Integer.parseInt(TableCasaFora.getValueAt(a, 1).toString()));
+                //JOptionPane.showMessageDialog(null, Integer.parseInt(golsC.get(x).toString())+" - "+Integer.parseInt(golsC.get(x + 1).toString()));
+                x += 2;
+                count++;
+                if (x > golsC.size() - 1) {
+                    break;
+                }
             }
-        }
+            lnp.setText(count + "");
 
-        for (int a = 0; a < 5; a++) {
-            if ((TableCasaFora2.getValueAt(a, 3).toString().trim()).equals(jLabelCasa1.getText())) {
-                res2.add(Integer.parseInt(TableCasaFora2.getValueAt(a, 2).toString()) - Integer.parseInt(TableCasaFora2.getValueAt(a, 1).toString()));
-            } else {
-                res2.add(Integer.parseInt(TableCasaFora2.getValueAt(a, 1).toString()) - Integer.parseInt(TableCasaFora2.getValueAt(a, 2).toString()));
+            x = 0;
+
+            if (golsC.size() > x) {
+                golsM += (Integer.parseInt(golsC.get(x).toString().trim()));
+                golsS += (Integer.parseInt(golsC.get(x + 1).toString().trim()));
+                if ((Integer.parseInt(golsC.get(x).toString().trim())) > Integer.parseInt(golsC.get(x + 1).toString().trim())) {
+                    val = (float) 1;
+                    vit1++;
+                    if ((Integer.parseInt(golsC.get(x).toString().trim())) - Integer.parseInt(golsC.get(x + 1).toString().trim()) > 1) {
+                        maior1++;
+                    }
+                } else {
+                    if ((Integer.parseInt(golsC.get(x).toString().trim())) == Integer.parseInt(golsC.get(x + 1).toString().trim())) {
+                        val = (float) 0.5;
+                    } else {
+                        val = 0;
+                        der1++;
+                        if (Integer.parseInt(golsC.get(x + 1).toString().trim()) - Integer.parseInt(golsC.get(x).toString().trim()) > 1) {
+                            menor1++;
+                        }
+                    }
+
+                }
+
             }
-        }
 
-        int i = 0;
-        float camp = 0, camp1 = 0;
+            x += 2;
 
-        while ((int) res.get(i) > 0) {
-            
-            i++;
+            if (golsC.size() > x) {
+                golsM += (Integer.parseInt(golsC.get(x).toString().trim()));
+                golsS += (Integer.parseInt(golsC.get(x + 1).toString().trim()));
+                if ((Integer.parseInt(golsC.get(x).toString().trim())) > Integer.parseInt(golsC.get(x + 1).toString().trim())) {
+                    val = (float) 1;
+                    vit1++;
+                    if ((Integer.parseInt(golsC.get(x).toString().trim())) - Integer.parseInt(golsC.get(x + 1).toString().trim()) > 1) {
+                        maior1++;
+                    }
+                } else {
+                    if ((Integer.parseInt(golsC.get(x).toString().trim())) == Integer.parseInt(golsC.get(x + 1).toString().trim())) {
+                        val = (float) 0.5;
+                    } else {
+                        val = 0;
+                        der1++;
+                        if (Integer.parseInt(golsC.get(x + 1).toString().trim()) - Integer.parseInt(golsC.get(x).toString().trim()) > 1) {
+                            menor1++;
+                        }
+                    }
+                }
 
-        }
-        camp += 3 * i;
-        i = 0;
-        while ((int) res2.get(i) > 0) {
-            i++;
-
-        }
-        camp1 += 3 * i;
-
-        i = 0;
-        while ((int) res.get(i) < 0) {
-            i++;
-
-        }
-        camp -= 2 * 1;
-
-        i = 0;
-        while ((int) res2.get(i) < 0) {
-            i++;
-
-        }
-        camp1 -= 2 * 1;
-
-        camp += ((progVit.getValue() - progDer.getValue()) / 10) + (((progMaior.getValue() - progMenor.getValue()) / 10) * 2);
-        camp1 += (progVit1.getValue() - progDer1.getValue()) / 10 + (((progMaior1.getValue() - progMenor1.getValue()) / 10) * 2);
-
-        golsM = Integer.parseInt(lGolsM.getText());
-        golsS = Integer.parseInt(lGolsS.getText());
-
-        r1.setText((int) (((cap1 + (cap1 + camp)) / 2)
-                + (golsM - golsS) * 0.5) + "%");
-
-        golsM = Integer.parseInt(lGolsM1.getText());
-        golsS = Integer.parseInt(lGolsS1.getText());
-        r2.setText((int) ((cap2 + (cap2 + camp1)) / 2
-                + (golsM - golsS) * 0.5) + "%");
-
-        //Match Odss
-        float v1 = Integer.parseInt(r1.getText().replace("%", "")), v2 = Integer.parseInt(r2.getText().replace("%", ""));
-        DecimalFormat df = new DecimalFormat("0.00");
-        //JOptionPane.showMessageDialog(null, v1 + " " + v2);
-        if (v1 > 50 && v1 > v2) {
-            MMatch.setText(df.format((1 / (v1)) * 100) + " - " + NomeCasa.getText());
-        }
-        if (v2 > 50 && v2 > v1) {
-            MMatch.setText(df.format((1 / (v2)) * 100) + " - " + NomeFora.getText());
-        }
-
-        if (v1 > v2) {
-            if ((v1 - v2) > 22 && progVit.getValue() > 49) {
-                MMatch.setText(df.format( (1 / (v1)) * 100) + " - " + NomeCasa.getText());
             }
-        }
-        if ((v1 - v2) < (-22) && progVit1.getValue() > 49) {
-            MMatch.setText(df.format((1 / v2) * 100) + " - " + NomeFora.getText());
-        }
 
-        //Mercado de Gols
-        float munder = Integer.parseInt(this.under.getText()), mover = Integer.parseInt(this.over.getText());
-        float munder1 = Integer.parseInt(this.under1.getText()), mover1 = Integer.parseInt(this.over1.getText());
+            x += 2;
 
-        if ((10 - mover + 10 - mover1) * 5 > 70) {
-            if (MMatch.getText().equals("")) {
-                MMatch.setText(df.format( (1 / ((10 - mover + 10 - mover1) * 5 / 100))) + " - Under 2.5");
-            } else {
-                MGols.setText(df.format( (1 / ((10 - mover + 10 - mover1) * 5 / 100))) + " - Under 2.5");
+            if (golsC.size() > x) {
+                golsM += (Integer.parseInt(golsC.get(x).toString().trim()));
+                golsS += (Integer.parseInt(golsC.get(x + 1).toString().trim()));
+                if ((Integer.parseInt(golsC.get(x).toString().trim())) > Integer.parseInt(golsC.get(x + 1).toString().trim())) {
+                    val = (float) 1;
+                    vit1++;
+                    if ((Integer.parseInt(golsC.get(x).toString().trim())) - Integer.parseInt(golsC.get(x + 1).toString().trim()) > 1) {
+                        maior1++;
+                    }
+                } else {
+                    if ((Integer.parseInt(golsC.get(x).toString().trim())) == Integer.parseInt(golsC.get(x + 1).toString().trim())) {
+                        val = (float) 0.5;
+                    } else {
+                        val = 0;
+                        der1++;
+                        if (Integer.parseInt(golsC.get(x + 1).toString().trim()) - Integer.parseInt(golsC.get(x).toString().trim()) > 1) {
+                            menor1++;
+                        }
+                    }
+                }
+
             }
-        }
 
-        if ((munder + munder1) * 5 > 65) {
-            if (MMatch.getText().equals("")) {
-                MMatch.setText(df.format( (1 / ((munder + munder1) * 5 / 100))) + " - Under 1.5");
-            } else {
-                MGols.setText(df.format( (1 / ((munder + munder1) * 5 / 100))) + " - Under 1.5");
+            x += 2;
+
+            if (golsC.size() > x) {
+                golsM += (Integer.parseInt(golsC.get(x).toString().trim()));
+                golsS += (Integer.parseInt(golsC.get(x + 1).toString().trim()));
+                if ((Integer.parseInt(golsC.get(x).toString().trim())) > Integer.parseInt(golsC.get(x + 1).toString().trim())) {
+                    val = (float) 1;
+                    vit1++;
+                    if ((Integer.parseInt(golsC.get(x).toString().trim())) - Integer.parseInt(golsC.get(x + 1).toString().trim()) > 1) {
+                        maior1++;
+                    }
+                } else {
+                    if ((Integer.parseInt(golsC.get(x).toString().trim())) == Integer.parseInt(golsC.get(x + 1).toString().trim())) {
+                        val = (float) 0.5;
+                    } else {
+                        val = 0;
+                        der1++;
+                        if (Integer.parseInt(golsC.get(x + 1).toString().trim()) - Integer.parseInt(golsC.get(x).toString().trim()) > 1) {
+                            menor1++;
+                        }
+                    }
+                }
+
             }
-        }
 
-        if ((mover + mover1) * 5 > 50) {
-            if (progMaior.getValue() >= 50 || progMaior1.getValue() >= 50) {
+            x += 2;
+
+            if (golsC.size() > x) {
+                golsM += (Integer.parseInt(golsC.get(x).toString().trim()));
+                golsS += (Integer.parseInt(golsC.get(x + 1).toString().trim()));
+                if ((Integer.parseInt(golsC.get(x).toString().trim())) > Integer.parseInt(golsC.get(x + 1).toString().trim())) {
+                    val = (float) 1;
+                    vit1++;
+                    if ((Integer.parseInt(golsC.get(x).toString().trim())) - Integer.parseInt(golsC.get(x + 1).toString().trim()) > 1) {
+                        maior1++;
+                    }
+                } else {
+                    if ((Integer.parseInt(golsC.get(x).toString().trim())) == Integer.parseInt(golsC.get(x + 1).toString().trim())) {
+                        val = (float) 0.5;
+                    } else {
+                        val = 0;
+                        der1++;
+                        if (Integer.parseInt(golsC.get(x + 1).toString().trim()) - Integer.parseInt(golsC.get(x).toString().trim()) > 1) {
+                            menor1++;
+                        }
+                    }
+                }
+
+            }
+            progVit1.setValue((int) (vit1 / emp * 100));
+            progDer1.setValue((int) (der1 / emp * 100));
+            progMaior1.setValue((int) (maior1 / emp * 100));
+            progMenor1.setValue((int) (menor1 / emp * 100));
+
+            lGolsS1.setText((int) golsS + "");
+            lGolsM1.setText((int) golsM + "");
+            lvit1.setText((int) vit1 + "");
+
+            //Resultado Geral
+            float vitC = Integer.parseInt(vitorias.getText());
+            float derC = Integer.parseInt(derrotas.getText());
+            float vitC1 = Integer.parseInt(vitorias1.getText());
+            float derC1 = Integer.parseInt(derrotas1.getText());
+            float cap1 = ((vitC + derC1) / (TableCasaFora.getRowCount() + TableCasaFora2.getRowCount())) * 100;
+            float cap2 = ((vitC1 + derC) / (TableCasaFora.getRowCount() + TableCasaFora2.getRowCount())) * 100;
+
+            //preenchendo V-D-E
+            ArrayList res = new ArrayList();
+            ArrayList res2 = new ArrayList();
+            res.clear();
+            res2.clear();
+            int TjogosC = TableCasaFora.getRowCount();
+            int TjogosF = TableCasaFora2.getRowCount();
+
+            for (int a = 0; a < TjogosC; a++) {
+                if ((TableCasaFora.getValueAt(a, 0).toString().trim()).equals(jLabelCasa.getText())) {
+                    res.add(Integer.parseInt(TableCasaFora.getValueAt(a, 1).toString()) - Integer.parseInt(TableCasaFora.getValueAt(a, 2).toString()));
+                } else {
+                    res.add(Integer.parseInt(TableCasaFora.getValueAt(a, 2).toString()) - Integer.parseInt(TableCasaFora.getValueAt(a, 1).toString()));
+                }
+            }
+
+            for (int a = 0; a < TjogosF; a++) {
+                if ((TableCasaFora2.getValueAt(a, 3).toString().trim()).equals(jLabelCasa1.getText())) {
+                    res2.add(Integer.parseInt(TableCasaFora2.getValueAt(a, 2).toString()) - Integer.parseInt(TableCasaFora2.getValueAt(a, 1).toString()));
+                } else {
+                    res2.add(Integer.parseInt(TableCasaFora2.getValueAt(a, 1).toString()) - Integer.parseInt(TableCasaFora2.getValueAt(a, 2).toString()));
+                }
+            }
+
+            Funcoes f = new Funcoes();
+
+            String Odds[] = f.gerarODD(res, res2, lnp1, lnp, progVit, progVit1, progDer, progDer1, progMaior, progMaior1, progMenor, progMenor1, cap1, cap2);
+            r1.setText(Odds[0]);
+
+            r2.setText(Odds[1]);
+
+            //Match Odss
+            float v1 = Float.parseFloat(r1.getText().replace("%", "")), v2 = Float.parseFloat(r2.getText().replace("%", ""));
+            DecimalFormat df = new DecimalFormat("0.00");
+
+            MMatch.setText(f.progH2H(v1, v2, NomeCasa, NomeFora, progVit, progVit1));
+
+            //Mercado de Gols
+            float munder = Integer.parseInt(this.under.getText()), mover = Integer.parseInt(this.over.getText());
+            float munder1 = Integer.parseInt(this.under1.getText()), mover1 = Integer.parseInt(this.over1.getText());
+
+            if ((10 - mover + 10 - mover1) * 5 > 70) {
                 if (MMatch.getText().equals("")) {
-                    MMatch.setText(df.format( (1 / ((mover + mover1) * 5)) * 100) + " - Over 2.5");
+                    MMatch.setText(df.format((1 / ((10 - mover + 10 - mover1) * 5 / 100))) + " - Under 2.5");
                 } else {
-                    MGols.setText(df.format( (1 / ((mover + mover1) * 5)) * 100) + " - Over 2.5");
+                    MGols.setText(df.format((1 / ((10 - mover + 10 - mover1) * 5 / 100))) + " - Under 2.5");
                 }
             }
+
+            if ((munder + munder1) * 5 > 65) {
+                if (MMatch.getText().equals("")) {
+                    MMatch.setText(df.format((1 / ((munder + munder1) * 5 / 100))) + " - Under 1.5");
+                } else {
+                    MGols.setText(df.format((1 / ((munder + munder1) * 5 / 100))) + " - Under 1.5");
+                }
+            }
+
+            if ((mover + mover1) * 5 > 50) {
+                if (progMaior.getValue() >= 50 || progMaior1.getValue() >= 50) {
+                    if (MMatch.getText().equals("")) {
+                        MMatch.setText(df.format((1 / ((mover + mover1) * 5)) * 100) + " - Over 2.5");
+                    } else {
+                        MGols.setText(df.format((1 / ((mover + mover1) * 5)) * 100) + " - Over 2.5");
+                    }
+                }
+            }
+
+            //**************BTS****************
+            float golsComp[] = {
+                Float.parseFloat(mm.getText()),
+                Float.parseFloat(ms.getText()),
+                Float.parseFloat(mm1.getText()),
+                Float.parseFloat(ms1.getText()),
+                Float.parseFloat(marca.getText()),
+                Float.parseFloat(sofre.getText()),
+                Float.parseFloat(marca1.getText()),
+                Float.parseFloat(sofre1.getText()),
+                Float.parseFloat(TableCasaFora.getRowCount() + "")
+            };
+            if (MMatch.getText().equals("")) {
+                f.gerarBTS(golsComp);
+            } else if (MGols.getText().equals("")) {
+                f.gerarBTS(golsComp);
+            } else if (BTS.getText().equals("")) {
+                f.gerarBTS(golsComp);
+            }
+
+            dados.add(2, MMatch.getText());
+            dados.add(3, MGols.getText());
+            dados.add(4, BTS.getText());
+
+
+            
+            
+            //preenchendo Live
+            //odds das casas
+            //thread para jogos ao vivo
+            return dados;
+
+        } catch (NumberFormatException e) {
+            dados.clear();
+            dados.add("vazio");
+            System.out.println(e);
         }
-
-        dados.add(2, MMatch.getText());
-        dados.add(3, MGols.getText());
-
-        //preenchendo Live
-        //odds das casas
-        //thread para jogos ao vivo
-        return dados;
         
-
-            } catch (Exception e) {
-        }
-        return null;
+        return dados;
     }
 
     /**
@@ -3277,6 +3222,7 @@ public class Analise extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTabbedPane Analise;
+    private javax.swing.JTextField BTS;
     private javax.swing.JPanel CampanhaCasa;
     private javax.swing.JPanel CampanhaCasa1;
     private javax.swing.JTextField MGols;
@@ -3292,7 +3238,6 @@ public class Analise extends javax.swing.JFrame {
     private javax.swing.JLabel derrotas4;
     private javax.swing.JLabel empates;
     private javax.swing.JLabel empates1;
-    private javax.swing.JTextField ht;
     private javax.swing.JTextField ht3;
     private javax.swing.JLabel j1;
     private javax.swing.JLabel j10;

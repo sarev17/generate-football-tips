@@ -34,6 +34,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.text.Normalizer;
 import java.util.Arrays;
 import java.util.Date;
@@ -215,7 +216,6 @@ public class Principal extends javax.swing.JFrame {
             TableConfrontos.getColumnModel().getColumn(1).setResizable(false);
             TableConfrontos.getColumnModel().getColumn(2).setResizable(false);
             TableConfrontos.getColumnModel().getColumn(3).setResizable(false);
-            TableConfrontos.getColumnModel().getColumn(3).setHeaderValue("Title 4");
         }
 
         jLabel9.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
@@ -637,8 +637,6 @@ public class Principal extends javax.swing.JFrame {
 
                 Funcoes f = new Funcoes();
 
-                String urlLive = "";
-
                 for (int i = 0; i < TableConfrontos.getRowCount(); i++) {
 
                     if (!f.buscarDuplo(TableConfrontos.getValueAt(i, 3).toString())) {
@@ -655,67 +653,93 @@ public class Principal extends javax.swing.JFrame {
                             Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
                         }
 
-                        a.lastGames(TableConfrontos.getValueAt(i, 3).toString());
+                        int numJogos = a.lastGames(TableConfrontos.getValueAt(i, 3).toString());
 
-                        lanalise.setText("montando tabelas " + TableConfrontos.getValueAt(i, 0) + " x " + TableConfrontos.getValueAt(i, 2));
+                        System.out.println("num jogos " + numJogos);
 
-                        try {
-                            ArrayList dados = new ArrayList();
+                        if (numJogos > 18) {
 
-                            for (int x = 0; x < dados.size(); x++) {
-                                dados.remove(x);
-                            }
-
-                            dados = a.desempenhoLoop(TableConfrontos.getValueAt(i, 3).toString());
-                            lanalise.setText("Iniciando a anaise " + TableConfrontos.getValueAt(i, 0) + " x " + TableConfrontos.getValueAt(i, 2));
-
-                            lanalise.setText("Colando fotos " + TableConfrontos.getValueAt(i, 0) + " x " + TableConfrontos.getValueAt(i, 2));
-
-                            Document doc;
-                            Document docLive = null;
-                            doc = Jsoup.connect(TableConfrontos.getValueAt(i, 3).toString()).get();
-                            Elements stats = doc.getElementsByClass("stats-game-head-teamname hide-mobile");
-                            Elements live;
-
-                            String linkconf = "";
-
-                            lanalise.setText("Obtendo prognostico " + TableConfrontos.getValueAt(i, 0) + " x " + TableConfrontos.getValueAt(i, 2));
+                            lanalise.setText("montando tabelas " + TableConfrontos.getValueAt(i, 0) + " x " + TableConfrontos.getValueAt(i, 2));
 
                             try {
+                                ArrayList dados = new ArrayList();
 
-                                DefaultTableModel analises = (DefaultTableModel) TableAnalises.getModel();
-                                DefaultTableModel confrontos = (DefaultTableModel) TableConfrontos.getModel();
+                                for (int x = 0; x < dados.size(); x++) {
+                                    dados.remove(x);
+                                }
 
-                                //INSERINDO PROGNOSTICO NA TABELA
-                                String data;
-                                String sql = "INSERT INTO prognosticos("
-                                        + "data,competicao,timeCasa,timeFora,prog,"
-                                        + "result,link,logoTimes,placar)"
-                                        + "VALUES(?,?,?,?,?,?,?,?,?)";
-                                if (!dados.get(2).equals("")) {
+                                dados = a.desempenhoLoop(TableConfrontos.getValueAt(i, 3).toString());
 
-                                    linkconf = TableConfrontos.getValueAt(i, 3).toString();
+                                if (!dados.get(0).equals("vazio")) {
+
+                                    lanalise.setText("Iniciando a anaise " + TableConfrontos.getValueAt(i, 0) + " x " + TableConfrontos.getValueAt(i, 2));
+
+                                    lanalise.setText("Colando fotos " + TableConfrontos.getValueAt(i, 0) + " x " + TableConfrontos.getValueAt(i, 2));
+
+                                    Document docLive = null;
+
+                                    lanalise.setText("Obtendo prognostico " + TableConfrontos.getValueAt(i, 0) + " x " + TableConfrontos.getValueAt(i, 2));
+
+                                    try {
+
+                                        DefaultTableModel analises = (DefaultTableModel) TableAnalises.getModel();
+
+                                        //INSERINDO PROGNOSTICO NA TABELA
+                                        String data = null;
+                                        String sql = "INSERT INTO prognosticos("
+                                                + "data,competicao,timeCasa,timeFora,prog,"
+                                                + "result,link,logoTimes,placar)"
+                                                + "VALUES(?,?,?,?,?,?,?,?,?)";
+
+                                        if (!dados.get(2).equals("")) {
+                                            ArrayList<Object[]> dadosTabela = f.salvarPrognostico(
+                                                    TableConfrontos, TableAnalises, i, docLive, dados,
+                                                    dados.get(2).toString(), data, data, sql);
+
+                                            analises.addRow(dadosTabela.get(0));
+                                            analises.addRow(dadosTabela.get(1));
+                                        }
+
+                                        if (!dados.get(3).equals("")) {
+
+                                            ArrayList<Object[]> dadosTabela2 = f.salvarPrognostico(
+                                                    TableConfrontos, TableAnalises, i, docLive,
+                                                    dados, dados.get(3).toString(), data, data, sql);
+
+                                            analises.addRow(dadosTabela2.get(0));
+                                            analises.addRow(dadosTabela2.get(1));
+                                        }
+
+                                        if (!dados.get(4).equals("")) {
+                                            ArrayList<Object[]> dadosTabela3 = f.salvarPrognostico(
+                                                    TableConfrontos, TableAnalises, i, docLive,
+                                                    dados, dados.get(4).toString(), data, data, sql);
+
+                                            analises.addRow(dadosTabela3.get(0));
+                                            analises.addRow(dadosTabela3.get(1));
+                                        }
+
+                                        /* String linkconf = TableConfrontos.getValueAt(i, 3).toString();
                                     docLive = Jsoup.connect(linkconf.replace("prelive", "live")).get();
-
+                                    
                                     Object[] inserir = {f.buscarImagem(LabelNCompeticao.getText(), deAccent(dados.get(0).toString()), 30, 30),
                                         dados.get(0) + " x " + dados.get(1) + "   " + dados.get(2),
                                         f.buscarImagem(LabelNCompeticao.getText(), deAccent(dados.get(1).toString()), 30, 30), linkconf};
                                     analises.addRow(inserir);
-
+                                    
                                     ArrayList l = null;
                                     String campanha;
                                     l = f.CampanhaTimes(dados.get(0).toString(), dados.get(1).toString(), dados.get(2).toString());
                                     if (l != null) {
                                         campanha = l.get(0) + "% | " + dados.get(0).toString() + " x "
                                                 + dados.get(1).toString() + " | " + l.get(3) + "%";
-
+                                        
                                     } else {
                                         campanha = "";
                                     }
                                     
                                     f.salvarEscudos(LabelNCompeticao.getText());
                                     
-
                                     Object[] inserirCampanha = {f.buscarImagem(LabelNCompeticao.getText(),
                                         deAccent(dados.get(0).toString()), 30, 30),
                                         campanha,
@@ -726,7 +750,7 @@ public class Principal extends javax.swing.JFrame {
                                     data = docLive.getElementsByClass("gamehead").get(1).text();
                                     data = data.substring(0, data.length() - 8);
                                     InserirDados id = new InserirDados();
-
+                                    
                                     id.inserir(data(data),
                                             deAccent(docLive.getElementsByClass("gamehead").get(2).text()),
                                             deAccent(dados.get(0).toString()), deAccent(dados.get(1).toString()),
@@ -738,44 +762,44 @@ public class Principal extends javax.swing.JFrame {
                                             + docLive.getElementsByClass("stats-game-head-teamname hide-mobile")
                                                     .get(1).select("a").select("img").attr("src"),
                                             sql, TableConfrontos.getValueAt(i, 1).toString());
+                                         */
+                                        dados.clear();
+                                        LabelQtdAnalises.setText(TableAnalises.getRowCount() + " " + "analises");
 
-                                    dados.clear();
-                                    LabelQtdAnalises.setText(TableAnalises.getRowCount() + " " + "analises");
+                                        //confrontos.removeRow(i);
+                                    } catch (IOException | SQLException e) {
+                                        lanalise.setText("erro");
 
-                                    //confrontos.removeRow(i);
+                                        for (int col = 0; col < TableConfrontos.getColumnCount(); col++) {
+                                            TableConfrontos.getColumnModel().getColumn(col).setCellRenderer(
+                                                    f.ColorLinha(TableConfrontos, i, Color.red, Color.white));
+                                        }
+
+                                    }
                                 }
-
-                            } catch (Exception e) {
-                                lanalise.setText("erro");
-
+                            } catch (IOException ex) {
+                                Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+                                //JOptionPane.showMessageDialog(null, "Análise não disponivel");
+                                ProgressBar.setValue(0);
+                                Labelprogresso.setText("Erro na analise");
+                                DefaultTableModel erro = (DefaultTableModel) TableConfrontos.getModel();
+                                //JOptionPane.showMessageDialog(null, "Catch");
+                                //erro.removeRow(TableConfrontos.getSelectedRow());
                                 for (int col = 0; col < TableConfrontos.getColumnCount(); col++) {
                                     TableConfrontos.getColumnModel().getColumn(col).setCellRenderer(
                                             f.ColorLinha(TableConfrontos, i, Color.red, Color.white));
                                 }
 
                             }
-                        } catch (IOException ex) {
-                            Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
-                            //JOptionPane.showMessageDialog(null, "Análise não disponivel");
-                            ProgressBar.setValue(0);
-                            Labelprogresso.setText("Erro na analise");
-                            DefaultTableModel erro = (DefaultTableModel) TableConfrontos.getModel();
-                            //JOptionPane.showMessageDialog(null, "Catch");
-                            //erro.removeRow(TableConfrontos.getSelectedRow());
+
+                            lanalise.setText("concluido");
+
                             for (int col = 0; col < TableConfrontos.getColumnCount(); col++) {
                                 TableConfrontos.getColumnModel().getColumn(col).setCellRenderer(
-                                        f.ColorLinha(TableConfrontos, i, Color.red, Color.white));
+                                        f.ColorLinha(TableConfrontos, i, Color.blue, Color.white));
                             }
 
                         }
-
-                        lanalise.setText("concluido");
-
-                        for (int col = 0; col < TableConfrontos.getColumnCount(); col++) {
-                            TableConfrontos.getColumnModel().getColumn(col).setCellRenderer(
-                                    f.ColorLinha(TableConfrontos, i, Color.blue, Color.white));
-                        }
-
                     }
                 }
             }
@@ -872,12 +896,14 @@ public class Principal extends javax.swing.JFrame {
 
     private void jBSelecionarCompMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jBSelecionarCompMouseClicked
 
+        int linhaTabela = TableConfrontos.getRowCount();
+
         if ("concluido".equals(lanalise.getText()) || "analise".equals(lanalise.getText())) {
 
             DefaultTableModel novoProcesso = (DefaultTableModel) TableConfrontos.getModel();
 
-            while (novoProcesso.getRowCount() > 0) {
-                novoProcesso.removeRow(novoProcesso.getRowCount() - 1);
+            for (int i = 0; i < linhaTabela; i++) {
+                novoProcesso.removeRow(0);
             }
 
             this.competicoes.setVisible(true);
@@ -895,6 +921,8 @@ public class Principal extends javax.swing.JFrame {
                 });
 
                 labelQtdJogos.setText(TableConfrontos.getRowCount() + " Jogos");
+
+                this.competicoes.dispose();
 
             }
 

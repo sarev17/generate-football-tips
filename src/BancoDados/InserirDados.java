@@ -101,6 +101,21 @@ public class InserirDados {
         
     }
     
+    /**
+     * 
+     * @param data data do confronto
+     * @param competicao nome da comp
+     * @param timeCasa nomecasa
+     * @param timeFora nome fora
+     * @param prog prognostico gerado
+     * @param result result do prognostico (green/red)
+     * @param link link do confronto
+     * @param logo link das logos
+     * @param sql comando sql
+     * @param placar resultadoda partida
+     * @throws IOException 
+     */
+    
     public void inserir(String data, String competicao,
             String timeCasa, String timeFora, String prog,
             String result, String link, String logo,String sql,String placar) throws IOException {

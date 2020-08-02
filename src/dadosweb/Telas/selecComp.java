@@ -13,7 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import org.jsoup.Jsoup;             
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
@@ -429,6 +429,23 @@ public class selecComp extends javax.swing.JDialog {
 
     private void jCPaisesItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCPaisesItemStateChanged
 
+        Funcoes f = new Funcoes();
+        Document doc;
+        try {
+            doc = f.buscarArquivo(f.obterCaminho("../generate-football-tips/src/dadosweb/consultaComps.txt"));
+            Elements comps = doc.getElementsByClass("boxed cpt-list").select("div").get(0)
+                    .getElementsByClass("toggle_content").get(jCPaises.getSelectedIndex()).select("a");
+
+            jCCamp.removeAllItems();
+
+            for (int i = 0; i < comps.size(); i++) {
+                jCCamp.addItem(comps.get(i).attr("title") + "                                               "
+                        + "                                                           -" + comps.get(i).attr("href"));
+            }
+        } catch (URISyntaxException | IOException ex) {
+            Logger.getLogger(selecComp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }//GEN-LAST:event_jCPaisesItemStateChanged
 
     private void jCPaisesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jCPaisesMouseClicked
@@ -436,24 +453,24 @@ public class selecComp extends javax.swing.JDialog {
     }//GEN-LAST:event_jCPaisesMouseClicked
 
     private void jCPaisesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCPaisesActionPerformed
-
         Funcoes f = new Funcoes();
         Document doc;
         try {
             doc = f.buscarArquivo(f.obterCaminho("../generate-football-tips/src/dadosweb/consultaComps.txt"));
             Elements comps = doc.getElementsByClass("boxed cpt-list").select("div").get(0)
-                .getElementsByClass("toggle_content").get(jCPaises.getSelectedIndex()).select("a");
+                    .getElementsByClass("toggle_content").get(jCPaises.getSelectedIndex()).select("a");
 
-        jCCamp.removeAllItems();
+            jCCamp.removeAllItems();
 
-        for (int i = 0; i < comps.size(); i++) {
-            jCCamp.addItem(comps.get(i).attr("title") + "                                               "
-                    + "                                                           -" + comps.get(i).attr("href"));
-        }
+            for (int i = 0; i < comps.size(); i++) {
+                jCCamp.addItem(comps.get(i).attr("title") + "                                               "
+                        + "                                                           -" + comps.get(i).attr("href"));
+            }
         } catch (URISyntaxException | IOException ex) {
             Logger.getLogger(selecComp.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
+
     }//GEN-LAST:event_jCPaisesActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
